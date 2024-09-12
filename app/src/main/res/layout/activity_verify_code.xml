@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:gravity="center"
+        android:padding="24dp"
+        android:backgroundTint="?android:colorBackground"
+        tools:context=".activities.VerifyCodeActivity">
+
+        <TextView
+            android:id="@+id/textDescription"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:hint="@string/Description"
+            android:textColor="?android:textColorSecondary"
+            android:padding="12dp"
+            android:gravity="center"/>
+
+        <EditText
+            android:id="@+id/inputCode"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="@string/enter_verification_code"
+            android:textColorHint="@color/on_secondary"
+            android:inputType="number"
+            android:layout_marginTop="100dp"
+            android:padding="12dp"
+            android:background="@drawable/backgrund_input"/>
+
+        <Button
+            android:id="@+id/buttonVerify"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/verify"
+            android:layout_marginTop="20dp"
+            android:background="@color/primary"
+            android:textColor="@android:color/white"
+            android:padding="12dp"
+            android:layout_below="@id/inputCode"/>
+    </RelativeLayout>
+</layout>

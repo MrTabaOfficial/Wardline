@@ -1,0 +1,34 @@
+<resources>
+    <string name="app_name">ChatSecure</string>
+    <string name="login_to_continue">Войдите, чтобы продолжить</string>
+    <string name="password">Пароль</string>
+    <string name="email">Электронная почта</string>
+    <string name="create_new_account">Создать аккаунт</string>
+    <string name="welcome_back">С возвращением!</string>
+    <string name="add_image">Добавить фото</string>
+    <string name="name">Имя</string>
+    <string name="confirm_password">Подтвердить пароль</string>
+    <string name="sign_up">Создать аккаунт</string>
+    <string name="sign_in">Авторизовать</string>
+    <string name="select_user">Выберите пользователя</string>
+    <string name="type_a_message">Написать сообщение</string>
+    <string name="online">Активен</string>
+    <string name="enter_verification_code">введите код подтверждения</string>
+    <string name="verify">Проверять</string>
+    <string name="select_language">Выберите язык</string>
+    <string name="save">Сохранять</string>
+    <string name="enable_dark_mode">Включить темный режим</string>
+    <string name="dark_mode">Темный режим</string>
+    <string name="save_password">Сохранить пароль</string>
+    <string name="new_password">Новый пароль</string>
+    <string name="old_password">Старый пароль</string>
+    <string name="change_password">Изменить пароль</string>
+    <string name="settings">Настройки</string>
+    <string name="forgot_password">Забыли пароль</string>
+    <string name="enter_your_email">Введите свой адрес электронной почты</string>
+    <string name="Description">Для входа в свою учетную запись введите код подтверждения, отправленный на ваш адрес электронной почты</string>
+    <string name="change_picture">Изменить изображение</string>
+    <string name="change_email">Изменить адрес электронной почты</string>
+    <string name="log_out">Выйти</string>
+    <string name="back">Назад</string>
+</resources>

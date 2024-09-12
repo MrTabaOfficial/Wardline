@@ -1,0 +1,34 @@
+<resources>
+    <string name="app_name">ChatSecure</string>
+    <string name="login_to_continue">შედით რომ გააგრძელოთ</string>
+    <string name="password">პაროლი</string>
+    <string name="email">ელ-ფოსტა</string>
+    <string name="create_new_account">ანგარიშის შექმნა</string>
+    <string name="welcome_back">კეთილი იყოს თქვენი მობრძანება!</string>
+    <string name="add_image">ფოტოს \nდამატება</string>
+    <string name="name">სახელი</string>
+    <string name="confirm_password">პაროლის დადასტურება</string>
+    <string name="sign_up">ანგარიშის შექმნა</string>
+    <string name="sign_in">ავტორიზაცია</string>
+    <string name="select_user">აირჩიეთ მომხმარებელი</string>
+    <string name="type_a_message">დაწერეთ წერილი</string>
+    <string name="online">აქტიურია</string>
+    <string name="enter_verification_code">შეიყვანეთ დამადასტურებელი კოდი</string>
+    <string name="verify">დადასტურება</string>
+    <string name="select_language">აირჩიეთ ენა</string>
+    <string name="save">დამახსოვრება</string>
+    <string name="enable_dark_mode">ჩართეთ მუქი რეჟიმი</string>
+    <string name="dark_mode">მუქი რეჟიმი</string>
+    <string name="save_password">შეინახე პაროლი</string>
+    <string name="new_password">ახალი პაროლი</string>
+    <string name="old_password">ძველი პაროლი</string>
+    <string name="change_password">პაროლის შეცვლა</string>
+    <string name="settings">პარამეტრები</string>
+    <string name="forgot_password">პაროლის აღდგენა</string>
+    <string name="enter_your_email">შეიყვანეთ ელ-ფოსტა</string>
+    <string name="Description">ანგარიშზე შესასვლელად შეიყვანეთ დადასტურების კოდი რომელი გამოგზავნილია თქვენს ელ-ფოსტაზე</string>
+    <string name="change_picture">სურათის შეცვლა</string>
+    <string name="change_email">ელფოსტის შეცვლა</string>
+    <string name="log_out">გამოსვლა</string>
+    <string name="back">უკან</string>
+</resources>
