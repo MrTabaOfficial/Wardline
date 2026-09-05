@@ -1,15 +1,30 @@
-*.iml
-.gradle
-/local.properties
-/.idea/caches
-/.idea/libraries
-/.idea/modules.xml
-/.idea/workspace.xml
-/.idea/navEditor.xml
-/.idea/assetWizardSettings.xml
-.DS_Store
-/build
+# Gradle / build output
+.gradle/
+.kotlin/
+build/
 /captures
 .externalNativeBuild
 .cxx
+*.apk
+*.aab
+*.dm
+
+# Local machine configuration and signing material
 local.properties
+*.jks
+*.keystore
+keystore.properties
+
+# Firebase config is project-specific; see README and app/google-services.json.example
+google-services.json
+
+# Firebase CLI / Cloud Functions
+.firebase/
+.firebaserc
+functions/node_modules/
+*-debug.log
+
+# IDE / OS
+.idea/
+*.iml
+.DS_Store

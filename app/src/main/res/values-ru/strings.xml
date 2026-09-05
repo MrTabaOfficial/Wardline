@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">ChatSecure</string>
+    <string name="app_name">Wardline</string>
     <string name="login_to_continue">Войдите, чтобы продолжить</string>
     <string name="password">Пароль</string>
     <string name="email">Электронная почта</string>
