@@ -13,8 +13,6 @@
     <string name="select_user">აირჩიეთ მომხმარებელი</string>
     <string name="type_a_message">დაწერეთ წერილი</string>
     <string name="online">აქტიურია</string>
-    <string name="enter_verification_code">შეიყვანეთ დამადასტურებელი კოდი</string>
-    <string name="verify">დადასტურება</string>
     <string name="select_language">აირჩიეთ ენა</string>
     <string name="save">დამახსოვრება</string>
     <string name="enable_dark_mode">ჩართეთ მუქი რეჟიმი</string>
@@ -26,9 +24,27 @@
     <string name="settings">პარამეტრები</string>
     <string name="forgot_password">პაროლის აღდგენა</string>
     <string name="enter_your_email">შეიყვანეთ ელ-ფოსტა</string>
-    <string name="Description">ანგარიშზე შესასვლელად შეიყვანეთ დადასტურების კოდი რომელი გამოგზავნილია თქვენს ელ-ფოსტაზე</string>
     <string name="change_picture">სურათის შეცვლა</string>
     <string name="change_email">ელფოსტის შეცვლა</string>
     <string name="log_out">გამოსვლა</string>
     <string name="back">უკან</string>
+    <string name="send">გაგზავნა</string>
+    <string name="resend_email">ხელახლა გაგზავნა</string>
+    <string name="email_verification_title">დაადასტურეთ ელ-ფოსტა</string>
+    <string name="email_verification_message">დადასტურების ბმული გამოგზავნილია მისამართზე %1$s. გახსენით ბმული და შემდეგ გაიარეთ ავტორიზაცია.</string>
+    <string name="email_not_verified_title">ელ-ფოსტა არ არის დადასტურებული</string>
+    <string name="email_not_verified_message">ავტორიზაციამდე დაადასტურეთ %1$s. გსურთ ახალი ბმულის მიღება?</string>
+    <string name="verification_email_sent">დადასტურების წერილი გაიგზავნა</string>
+    <string name="password_reset_sent">თუ ამ ელ-ფოსტით ანგარიში არსებობს, აღდგენის ბმული გაიგზავნა.</string>
+    <string name="error_enter_name">შეიყვანეთ სახელი</string>
+    <string name="error_enter_email">შეიყვანეთ ელ-ფოსტა</string>
+    <string name="error_invalid_email">შეიყვანეთ სწორი ელ-ფოსტა</string>
+    <string name="error_enter_password">შეიყვანეთ პაროლი</string>
+    <string name="error_password_too_short">პაროლი უნდა შეიცავდეს მინიმუმ %1$d სიმბოლოს</string>
+    <string name="error_password_mismatch">პაროლები არ ემთხვევა</string>
+    <string name="error_select_image">აირჩიეთ პროფილის სურათი</string>
+    <string name="error_invalid_credentials">არასწორი ელ-ფოსტა ან პაროლი</string>
+    <string name="error_fetch_user">პროფილის ჩატვირთვა ვერ მოხერხდა</string>
+    <string name="error_sign_up">ანგარიშის შექმნა ვერ მოხერხდა. სცადეთ თავიდან.</string>
+    <string name="error_verification_email">დადასტურების წერილის გაგზავნა ვერ მოხერხდა. სცადეთ მოგვიანებით.</string>
 </resources>

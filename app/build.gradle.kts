@@ -54,11 +54,6 @@ dependencies {
     implementation(libs.ssp.android)
     implementation(libs.roundedimageview)
 
-    implementation(libs.retrofit)
-    implementation(libs.retrofit.converter.scalars)
-    implementation(libs.android.mail)
-    implementation(libs.android.activation)
-
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.test.junit)
     androidTestImplementation(libs.androidx.test.espresso.core)

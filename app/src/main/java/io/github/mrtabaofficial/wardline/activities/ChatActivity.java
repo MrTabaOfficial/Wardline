@@ -21,8 +21,6 @@ import io.github.mrtabaofficial.wardline.adapters.ChatAdapter;
 import io.github.mrtabaofficial.wardline.databinding.ActivityChatBinding;
 import io.github.mrtabaofficial.wardline.models.ChatMessage;
 import io.github.mrtabaofficial.wardline.models.User;
-import io.github.mrtabaofficial.wardline.network.ApiClient;
-import io.github.mrtabaofficial.wardline.network.ApiService;
 import io.github.mrtabaofficial.wardline.utilities.Constants;
 import io.github.mrtabaofficial.wardline.utilities.EncryptionUtil;
 import io.github.mrtabaofficial.wardline.utilities.PreferenceManager;
@@ -37,10 +35,6 @@ import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
 
 
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
-
 import java.io.ByteArrayOutputStream;
 import java.io.FileNotFoundException;
 import java.io.InputStream;
@@ -52,11 +46,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.Objects;
-import javax.crypto.SecretKey;
-
-import retrofit2.Call;
-import retrofit2.Callback;
-import retrofit2.Response;
 
 public class ChatActivity extends BaseActivity {
     private ActivityChatBinding binding;
@@ -72,7 +61,10 @@ public class ChatActivity extends BaseActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        super. onCreate(savedInstanceState);
+        super.onCreate(savedInstanceState);
+        if (isFinishing()) {
+            return;
+        }
         binding = ActivityChatBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
         setListeners();
@@ -168,27 +160,6 @@ public class ChatActivity extends BaseActivity {
                 conversion.put(Constants.KEY_TIMESTAMP, timestamp);
                 addConversion(conversion);
             }
-
-            if (!isReceiverAvailable) {
-                try {
-                    JSONArray tokens = new JSONArray();
-                    tokens.put(receiverUser.token);
-
-                    JSONObject data = new JSONObject();
-                    data.put(Constants.KEY_USER_ID, preferenceManager.getString(Constants.KEY_USER_ID));
-                    data.put(Constants.KEY_NAME, preferenceManager.getString(Constants.KEY_NAME));
-                    data.put(Constants.KEY_FCM_TOKEN, preferenceManager.getString(Constants.KEY_FCM_TOKEN));
-                    data.put(Constants.KEY_MESSAGE, messageText);
-
-                    JSONObject body = new JSONObject();
-                    body.put(Constants.REMOTE_MSG_DATA, data);
-                    body.put(Constants.REMOTE_MSG_REGISTRATION_IDS, tokens);
-
-                    sendNotification(body.toString());
-                } catch (Exception exception) {
-                    showToast(exception.getMessage());
-                }
-            }
             binding.inputMessage.setText(null);
         } catch (Exception e) {
             e.printStackTrace();
@@ -218,40 +189,6 @@ public class ChatActivity extends BaseActivity {
             conversion.put(Constants.KEY_TIMESTAMP, new Date());
             addConversion(conversion);
         }
-    }
-
-    private void sendNotification(String messageBody) {
-        ApiClient.getClient().create(ApiService.class).sendMessage(
-                Constants.getRemoteMsgHeaders(),
-                messageBody
-        ).enqueue(new Callback<String>() {
-            @Override
-            public void onResponse(@NonNull Call<String> call, @NonNull Response<String> response) {
-                if (response.isSuccessful()) {
-                    try {
-                        if (response.body() != null) {
-                            JSONObject responseJson = new JSONObject(response.body());
-                            JSONArray results = responseJson.getJSONArray("results");
-                            if (responseJson.getInt("failure") == 1) {
-                                JSONObject error = (JSONObject) results.get(0);
-                                showToast(error.getString("error"));
-                                return;
-                            }
-                        }
-                    } catch (JSONException e) {
-                        e.printStackTrace();
-                    }
-                    showToast("Notification sent successfully");
-                } else {
-                    showToast("Error: " + response.code());
-                }
-            }
-
-            @Override
-            public void onFailure(@NonNull Call<String> call, @NonNull Throwable t) {
-                showToast(t.getMessage());
-            }
-        });
     }
 
     private void listenAvailabilityOfReceiver() {

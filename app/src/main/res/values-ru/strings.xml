@@ -13,8 +13,6 @@
     <string name="select_user">Выберите пользователя</string>
     <string name="type_a_message">Написать сообщение</string>
     <string name="online">Активен</string>
-    <string name="enter_verification_code">введите код подтверждения</string>
-    <string name="verify">Проверять</string>
     <string name="select_language">Выберите язык</string>
     <string name="save">Сохранять</string>
     <string name="enable_dark_mode">Включить темный режим</string>
@@ -26,9 +24,27 @@
     <string name="settings">Настройки</string>
     <string name="forgot_password">Забыли пароль</string>
     <string name="enter_your_email">Введите свой адрес электронной почты</string>
-    <string name="Description">Для входа в свою учетную запись введите код подтверждения, отправленный на ваш адрес электронной почты</string>
     <string name="change_picture">Изменить изображение</string>
     <string name="change_email">Изменить адрес электронной почты</string>
     <string name="log_out">Выйти</string>
     <string name="back">Назад</string>
+    <string name="send">Отправить</string>
+    <string name="resend_email">Отправить повторно</string>
+    <string name="email_verification_title">Подтвердите адрес электронной почты</string>
+    <string name="email_verification_message">Мы отправили ссылку для подтверждения на %1$s. Перейдите по ней, затем войдите.</string>
+    <string name="email_not_verified_title">Адрес не подтверждён</string>
+    <string name="email_not_verified_message">Подтвердите %1$s перед входом. Отправить новую ссылку?</string>
+    <string name="verification_email_sent">Письмо для подтверждения отправлено</string>
+    <string name="password_reset_sent">Если аккаунт с этим адресом существует, ссылка для сброса отправлена.</string>
+    <string name="error_enter_name">Введите имя</string>
+    <string name="error_enter_email">Введите адрес электронной почты</string>
+    <string name="error_invalid_email">Введите корректный адрес электронной почты</string>
+    <string name="error_enter_password">Введите пароль</string>
+    <string name="error_password_too_short">Пароль должен содержать не менее %1$d символов</string>
+    <string name="error_password_mismatch">Пароли не совпадают</string>
+    <string name="error_select_image">Выберите фото профиля</string>
+    <string name="error_invalid_credentials">Неверный адрес или пароль</string>
+    <string name="error_fetch_user">Не удалось загрузить профиль</string>
+    <string name="error_sign_up">Не удалось создать аккаунт. Попробуйте ещё раз.</string>
+    <string name="error_verification_email">Не удалось отправить письмо. Попробуйте позже.</string>
 </resources>

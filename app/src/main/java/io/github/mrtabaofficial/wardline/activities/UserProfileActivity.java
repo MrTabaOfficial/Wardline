@@ -242,9 +242,27 @@ public class UserProfileActivity extends AppCompatActivity {
     }
 
     private void signOut() {
+        FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+        if (user == null) {
+            finishSignOut();
+            return;
+        }
+        HashMap<String, Object> updates = new HashMap<>();
+        updates.put(Constants.KEY_FCM_TOKEN, FieldValue.delete());
+        updates.put(Constants.KEY_AVAILABILITY, 0);
+        FirebaseFirestore.getInstance()
+                .collection(Constants.KEY_COLLECTION_USERS)
+                .document(user.getUid())
+                .update(updates)
+                .addOnCompleteListener(task -> finishSignOut());
+    }
+
+    private void finishSignOut() {
         preferenceManager.clear();
         FirebaseAuth.getInstance().signOut();
-        startActivity(new Intent(getApplicationContext(), SignInActivity.class));
+        Intent intent = new Intent(getApplicationContext(), SignInActivity.class);
+        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+        startActivity(intent);
         finish();
     }
 }

@@ -1,7 +1,5 @@
 package io.github.mrtabaofficial.wardline.utilities;
 
-import java.util.HashMap;
-
 public class Constants {
     public static final String KEY_COLLECTION_USERS = "users";
     public static final String KEY_NAME = "name";
@@ -24,29 +22,7 @@ public class Constants {
     public static final String KEY_RECEIVER_IMAGE = "receiverImage";
     public static final String KEY_LAST_MESSAGE = "lastMessage";
     public static final String KEY_AVAILABILITY = "availability";
-    public static final String REMOTE_MSG_AUTHORIZATION = "Authorization";
-    public static final String REMOTE_MSG_CONTENT_TYPE = "Content-Type";
-    public static final String REMOTE_MSG_DATA = "data";
-    public static final String REMOTE_MSG_REGISTRATION_IDS = "registration_ids";
-    public static final String KEY_TYPE = "photo";
-    public static final String KEY_CHAT_IMAGE = "chatPhoto";
-    public static final String KEY_CHANNEL_NAME = "channelName";
-    public static final String KEY_TOKEN = "token";
     public static final String KEY_MY_LANG = "My_Lang";
 
-    public static HashMap<String, String> remoteMsgHeaders = null;
-    public static HashMap<String, String> getRemoteMsgHeaders() {
-        if (remoteMsgHeaders == null) {
-            remoteMsgHeaders = new HashMap<>();
-            remoteMsgHeaders.put(
-                    REMOTE_MSG_AUTHORIZATION,
-                    "key=REDACTED"
-            );
-            remoteMsgHeaders.put(
-                    REMOTE_MSG_CONTENT_TYPE,
-                    "application/json"
-            );
-        }
-        return remoteMsgHeaders;
-    }
+    public static final int MIN_PASSWORD_LENGTH = 8;
 }

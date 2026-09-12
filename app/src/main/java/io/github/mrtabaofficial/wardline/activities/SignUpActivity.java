@@ -10,18 +10,15 @@ import android.util.Base64;
 import android.util.Patterns;
 import android.view.View;
 import android.widget.Toast;
-import android.app.AlertDialog;
-import android.content.DialogInterface;
 
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 
 import io.github.mrtabaofficial.wardline.R;
 import io.github.mrtabaofficial.wardline.databinding.ActivitySignUpBinding;
 import io.github.mrtabaofficial.wardline.utilities.Constants;
-import io.github.mrtabaofficial.wardline.utilities.PreferenceManager;
-import com.google.firebase.FirebaseApp;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.FirebaseFirestore;
@@ -34,7 +31,6 @@ import java.util.HashMap;
 public class SignUpActivity extends AppCompatActivity {
 
     private ActivitySignUpBinding binding;
-    private PreferenceManager preferenceManager;
     private String encodedImage;
 
     @Override
@@ -42,8 +38,6 @@ public class SignUpActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         binding = ActivitySignUpBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
-        preferenceManager = new PreferenceManager(getApplicationContext());
-        FirebaseApp.initializeApp(this);
         setListeners();
     }
 
@@ -68,74 +62,59 @@ public class SignUpActivity extends AppCompatActivity {
     private void signUp() {
         loading(true);
         FirebaseAuth mAuth = FirebaseAuth.getInstance();
-        String email = binding.inputEmail.getText().toString();
+        String email = binding.inputEmail.getText().toString().trim();
         String password = binding.inputPassword.getText().toString();
 
         mAuth.createUserWithEmailAndPassword(email, password)
                 .addOnCompleteListener(this, task -> {
-                    if (task.isSuccessful()) {
-                        FirebaseUser firebaseUser = mAuth.getCurrentUser();
-                        if (firebaseUser != null) {
-                            sendVerificationEmail(firebaseUser);
-                        }
+                    FirebaseUser firebaseUser = mAuth.getCurrentUser();
+                    if (task.isSuccessful() && firebaseUser != null) {
+                        storeUserInFirestore(firebaseUser);
                     } else {
                         loading(false);
-                        showToast(task.getException().getMessage());
+                        showToast(getString(R.string.error_sign_up));
                     }
                 });
-    }
-    private void sendVerificationEmail(FirebaseUser firebaseUser) {
-        firebaseUser.sendEmailVerification().addOnCompleteListener(task -> {
-            if (task.isSuccessful()) {
-                showVerificationDialog(firebaseUser);
-            } else {
-                loading(false);
-                showToast(task.getException().getMessage());
-            }
-        });
-    }
-
-    private void showVerificationDialog(FirebaseUser firebaseUser) {
-        new AlertDialog.Builder(this)
-                .setTitle("Email Verification")
-                .setMessage("A verification email has been sent to " + firebaseUser.getEmail() + ". Please verify your email and then log in.")
-                .setPositiveButton("OK", (dialog, which) -> {
-                    storeUserInFirestore(firebaseUser);
-                    FirebaseAuth.getInstance().signOut();
-                    dialog.dismiss();
-                    loading(false);
-                    startActivity(new Intent(SignUpActivity.this, SignInActivity.class));
-                    finish();
-                })
-                .setNegativeButton("Resend Email", (dialog, which) ->{storeUserInFirestore(firebaseUser); sendVerificationEmail(firebaseUser);})
-                .setCancelable(false)
-                .show();
     }
 
     private void storeUserInFirestore(FirebaseUser firebaseUser) {
         FirebaseFirestore database = FirebaseFirestore.getInstance();
         HashMap<String, Object> user = new HashMap<>();
-        user.put(Constants.KEY_NAME, binding.inputName.getText().toString());
+        user.put(Constants.KEY_NAME, binding.inputName.getText().toString().trim());
         user.put(Constants.KEY_EMAIL, firebaseUser.getEmail());
         user.put(Constants.KEY_IMAGE, encodedImage);
 
         database.collection(Constants.KEY_COLLECTION_USERS)
                 .document(firebaseUser.getUid())
                 .set(user)
-                .addOnSuccessListener(aVoid -> {
-                    loading(false);
-                    preferenceManager.putBoolean(Constants.KEY_IS_SIGNED_IN, true);
-                    preferenceManager.putString(Constants.KEY_USER_ID, firebaseUser.getUid());
-                    preferenceManager.putString(Constants.KEY_NAME, binding.inputName.getText().toString());
-                    preferenceManager.putString(Constants.KEY_IMAGE, encodedImage);
-                    Intent intent = new Intent(getApplicationContext(), MainActivity.class);
-                    intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-                    startActivity(intent);
-                })
+                .addOnSuccessListener(aVoid -> sendVerificationEmail(firebaseUser))
                 .addOnFailureListener(exception -> {
                     loading(false);
-                    showToast(exception.getMessage());
+                    showToast(getString(R.string.error_sign_up));
                 });
+    }
+
+    private void sendVerificationEmail(FirebaseUser firebaseUser) {
+        firebaseUser.sendEmailVerification().addOnCompleteListener(task -> {
+            String email = firebaseUser.getEmail();
+            FirebaseAuth.getInstance().signOut();
+            loading(false);
+            showVerificationDialog(email, task.isSuccessful());
+        });
+    }
+
+    private void showVerificationDialog(String email, boolean emailSent) {
+        new AlertDialog.Builder(this)
+                .setTitle(R.string.email_verification_title)
+                .setMessage(emailSent
+                        ? getString(R.string.email_verification_message, email)
+                        : getString(R.string.error_verification_email))
+                .setPositiveButton(android.R.string.ok, (dialog, which) -> {
+                    dialog.dismiss();
+                    finish();
+                })
+                .setCancelable(false)
+                .show();
     }
 
     private String encodeImage(Bitmap bitmap) {
@@ -169,26 +148,25 @@ public class SignUpActivity extends AppCompatActivity {
     );
 
     private Boolean isValidSignUpDetails() {
+        String email = binding.inputEmail.getText().toString().trim();
+        String password = binding.inputPassword.getText().toString();
         if (encodedImage == null) {
-            showToast("Select profile image");
+            showToast(getString(R.string.error_select_image));
             return false;
         } else if (binding.inputName.getText().toString().trim().isEmpty()) {
-            showToast("Enter name");
+            showToast(getString(R.string.error_enter_name));
             return false;
-        } else if (binding.inputEmail.getText().toString().trim().isEmpty()) {
-            showToast("Enter email");
+        } else if (email.isEmpty()) {
+            showToast(getString(R.string.error_enter_email));
             return false;
-        } else if (!Patterns.EMAIL_ADDRESS.matcher(binding.inputEmail.getText().toString()).matches()) {
-            showToast("Enter valid email");
+        } else if (!Patterns.EMAIL_ADDRESS.matcher(email).matches()) {
+            showToast(getString(R.string.error_invalid_email));
             return false;
-        } else if (binding.inputPassword.getText().toString().trim().isEmpty()) {
-            showToast("Enter password");
+        } else if (password.length() < Constants.MIN_PASSWORD_LENGTH) {
+            showToast(getString(R.string.error_password_too_short, Constants.MIN_PASSWORD_LENGTH));
             return false;
-        } else if (binding.inputConfirmPassword.getText().toString().trim().isEmpty()) {
-            showToast("Confirm your password");
-            return false;
-        } else if (!binding.inputPassword.getText().toString().equals(binding.inputConfirmPassword.getText().toString())) {
-            showToast("Password & confirm password must be same");
+        } else if (!password.equals(binding.inputConfirmPassword.getText().toString())) {
+            showToast(getString(R.string.error_password_mismatch));
             return false;
         } else {
             return true;

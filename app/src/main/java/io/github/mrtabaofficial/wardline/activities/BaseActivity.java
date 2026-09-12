@@ -1,5 +1,6 @@
 package io.github.mrtabaofficial.wardline.activities;
 
+import android.content.Intent;
 import android.os.Bundle;
 
 import androidx.annotation.Nullable;
@@ -7,7 +8,8 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import io.github.mrtabaofficial.wardline.utilities.Constants;
 import io.github.mrtabaofficial.wardline.utilities.LocaleHelper;
-import io.github.mrtabaofficial.wardline.utilities.PreferenceManager;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.FirebaseFirestore;
 
@@ -18,20 +20,32 @@ public class BaseActivity extends AppCompatActivity {
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         LocaleHelper.applySavedLocale(this);
-        PreferenceManager preferenceManager = new PreferenceManager(getApplicationContext());
-        FirebaseFirestore database = FirebaseFirestore.getInstance();
-        documentReference = database.collection(Constants.KEY_COLLECTION_USERS)
-                .document(preferenceManager.getString(Constants.KEY_USER_ID));
-
+        FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+        if (user == null || !user.isEmailVerified()) {
+            Intent intent = new Intent(getApplicationContext(), SignInActivity.class);
+            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+            startActivity(intent);
+            finish();
+            return;
+        }
+        documentReference = FirebaseFirestore.getInstance()
+                .collection(Constants.KEY_COLLECTION_USERS)
+                .document(user.getUid());
     }
+
     @Override
     protected void onPause() {
         super.onPause();
-        documentReference.update(Constants.KEY_AVAILABILITY, 0);
+        if (documentReference != null) {
+            documentReference.update(Constants.KEY_AVAILABILITY, 0);
+        }
     }
+
     @Override
     protected void onResume() {
         super.onResume();
-        documentReference.update(Constants.KEY_AVAILABILITY, 1);
+        if (documentReference != null) {
+            documentReference.update(Constants.KEY_AVAILABILITY, 1);
+        }
     }
 }
