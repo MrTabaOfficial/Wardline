@@ -49,4 +49,10 @@
     <string name="error_fetch_user">Unable to load your profile</string>
     <string name="error_sign_up">Unable to create the account. Please try again.</string>
     <string name="error_verification_email">Unable to send the verification email. Please try again later.</string>
+    <string name="delete">Delete</string>
+    <string name="no_users">No users available</string>
+    <string name="message_deleted">Message deleted</string>
+    <string name="message_unavailable">Message could not be decrypted</string>
+    <string name="error_send_message">Message could not be sent</string>
+    <string name="error_delete_message">Message could not be deleted</string>
 </resources>

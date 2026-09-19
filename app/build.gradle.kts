@@ -1,7 +1,18 @@
+import java.util.Base64
+import java.util.Properties
+
 plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.google.services)
 }
+
+val localProperties = Properties().apply {
+    providers.fileContents(rootProject.layout.projectDirectory.file("local.properties"))
+        .asText.orNull?.let { load(it.reader()) }
+}
+val chatAesKey: String = providers.gradleProperty("chatAesKey").orNull
+    ?: localProperties.getProperty("chat.aesKey")
+    ?: ""
 
 android {
     namespace = "io.github.mrtabaofficial.wardline"
@@ -14,6 +25,7 @@ android {
         versionCode = 2
         versionName = "2.0.0"
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
+        buildConfigField("String", "CHAT_AES_KEY", "\"$chatAesKey\"")
     }
 
     buildTypes {
@@ -34,6 +46,7 @@ android {
 
     buildFeatures {
         viewBinding = true
+        buildConfig = true
     }
 }
 
@@ -58,3 +71,16 @@ dependencies {
     androidTestImplementation(libs.androidx.test.junit)
     androidTestImplementation(libs.androidx.test.espresso.core)
 }
+
+val checkChatAesKey = tasks.register("checkChatAesKey") {
+    val key = chatAesKey
+    doLast {
+        val valid = runCatching { Base64.getDecoder().decode(key).size == 32 }.getOrDefault(false)
+        check(valid) {
+            "Set chat.aesKey in local.properties to a Base64-encoded 32-byte key, " +
+                "for example the output of: openssl rand -base64 32"
+        }
+    }
+}
+
+tasks.named("preBuild") { dependsOn(checkChatAesKey) }

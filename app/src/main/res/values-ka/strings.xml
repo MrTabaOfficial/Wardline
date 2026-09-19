@@ -47,4 +47,10 @@
     <string name="error_fetch_user">პროფილის ჩატვირთვა ვერ მოხერხდა</string>
     <string name="error_sign_up">ანგარიშის შექმნა ვერ მოხერხდა. სცადეთ თავიდან.</string>
     <string name="error_verification_email">დადასტურების წერილის გაგზავნა ვერ მოხერხდა. სცადეთ მოგვიანებით.</string>
+    <string name="delete">წაშლა</string>
+    <string name="no_users">მომხმარებლები არ მოიძებნა</string>
+    <string name="message_deleted">შეტყობინება წაშლილია</string>
+    <string name="message_unavailable">შეტყობინების გაშიფვრა ვერ მოხერხდა</string>
+    <string name="error_send_message">შეტყობინების გაგზავნა ვერ მოხერხდა</string>
+    <string name="error_delete_message">შეტყობინების წაშლა ვერ მოხერხდა</string>
 </resources>

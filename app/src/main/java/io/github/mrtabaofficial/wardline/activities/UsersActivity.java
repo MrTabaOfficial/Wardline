@@ -5,21 +5,22 @@ import android.os.Bundle;
 import android.view.View;
 
 
+import io.github.mrtabaofficial.wardline.R;
 import io.github.mrtabaofficial.wardline.adapters.UsersAdapter;
 import io.github.mrtabaofficial.wardline.databinding.ActivityUsersBinding;
 import io.github.mrtabaofficial.wardline.listeners.UserListener;
 import io.github.mrtabaofficial.wardline.models.User;
 import io.github.mrtabaofficial.wardline.utilities.Constants;
-import io.github.mrtabaofficial.wardline.utilities.PreferenceManager;
+import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 public class UsersActivity extends BaseActivity implements UserListener {
     private ActivityUsersBinding binding;
-    private PreferenceManager preferenceManager;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -29,7 +30,6 @@ public class UsersActivity extends BaseActivity implements UserListener {
         }
         binding = ActivityUsersBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
-        preferenceManager = new PreferenceManager(getApplicationContext());
         setListeners();
         getUsers();
     }
@@ -43,7 +43,7 @@ public class UsersActivity extends BaseActivity implements UserListener {
                 .get()
                 .addOnCompleteListener(task -> {
                     loading(false);
-                    String currentUserId = preferenceManager.getString(Constants.KEY_USER_ID);
+                    String currentUserId = Objects.requireNonNull(FirebaseAuth.getInstance().getCurrentUser()).getUid();
                     if(task.isSuccessful() && task.getResult() != null) {
                         List<User> users = new ArrayList<>();
                         for(QueryDocumentSnapshot queryDocumentSnapshot : task.getResult()) {
@@ -54,7 +54,6 @@ public class UsersActivity extends BaseActivity implements UserListener {
                             user.name = queryDocumentSnapshot.getString(Constants.KEY_NAME);
                             user.email = queryDocumentSnapshot.getString(Constants.KEY_EMAIL);
                             user.image = queryDocumentSnapshot.getString(Constants.KEY_IMAGE);
-                            user.token = queryDocumentSnapshot.getString(Constants.KEY_FCM_TOKEN);
                             user.id = queryDocumentSnapshot.getId();
                             users.add(user);
                         }
@@ -71,7 +70,7 @@ public class UsersActivity extends BaseActivity implements UserListener {
                 });
     }
     private void showErrorMessage() {
-        binding.textErrorMessage.setText(String. format("%s", "No user available"));
+        binding.textErrorMessage.setText(R.string.no_users);
         binding. textErrorMessage.setVisibility (View.VISIBLE);
     }
     private void loading (Boolean isLoading) {

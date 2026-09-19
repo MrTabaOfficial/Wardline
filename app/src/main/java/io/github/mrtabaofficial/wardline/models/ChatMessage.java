@@ -1,11 +1,19 @@
 package io.github.mrtabaofficial.wardline.models;
 
 import java.util.Date;
-import android.graphics.Bitmap;
+import java.util.Objects;
 
 public class ChatMessage {
-    public String senderId, receiverId, message, dateTime, id, messageType;
+    public String id, senderId, receiverId, message, dateTime;
     public Date dataObject;
+    public boolean deleted;
     public String conversionId, conversionName, conversionImage;
-    public Bitmap image;
+
+    public boolean hasSameContent(ChatMessage other) {
+        return deleted == other.deleted
+                && Objects.equals(message, other.message)
+                && Objects.equals(dateTime, other.dateTime)
+                && Objects.equals(conversionName, other.conversionName)
+                && Objects.equals(conversionImage, other.conversionImage);
+    }
 }

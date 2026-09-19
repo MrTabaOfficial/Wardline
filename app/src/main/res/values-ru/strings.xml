@@ -47,4 +47,10 @@
     <string name="error_fetch_user">Не удалось загрузить профиль</string>
     <string name="error_sign_up">Не удалось создать аккаунт. Попробуйте ещё раз.</string>
     <string name="error_verification_email">Не удалось отправить письмо. Попробуйте позже.</string>
+    <string name="delete">Удалить</string>
+    <string name="no_users">Пользователи не найдены</string>
+    <string name="message_deleted">Сообщение удалено</string>
+    <string name="message_unavailable">Не удалось расшифровать сообщение</string>
+    <string name="error_send_message">Не удалось отправить сообщение</string>
+    <string name="error_delete_message">Не удалось удалить сообщение</string>
 </resources>
