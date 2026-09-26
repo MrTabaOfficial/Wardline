@@ -6,7 +6,14 @@ public class Constants {
     public static final String KEY_EMAIL = "email";
     public static final String KEY_IMAGE = "image";
     public static final String KEY_AVAILABILITY = "availability";
+
+    public static final String KEY_COLLECTION_PRIVATE = "private";
+    public static final String KEY_DOCUMENT_MESSAGING = "messaging";
     public static final String KEY_FCM_TOKEN = "fcmToken";
+
+    public static final String REMOTE_MSG_SENDER_ID = "senderId";
+    public static final String REMOTE_MSG_SENDER_NAME = "senderName";
+    public static final String REMOTE_MSG_CIPHERTEXT = "ciphertext";
 
     public static final String KEY_COLLECTION_CONVERSATIONS = "conversations";
     public static final String KEY_PARTICIPANTS = "participants";

@@ -1,14 +1,22 @@
 package io.github.mrtabaofficial.wardline.activities;
 
+import android.Manifest;
 import android.content.Intent;
+import android.content.pm.PackageManager;
+import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
+
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.contract.ActivityResultContracts;
+import androidx.core.content.ContextCompat;
 
 import io.github.mrtabaofficial.wardline.R;
 import io.github.mrtabaofficial.wardline.adapters.RecentConversationsAdapter;
 import io.github.mrtabaofficial.wardline.crypto.MessageCipher;
 import io.github.mrtabaofficial.wardline.databinding.ActivityMainBinding;
+import io.github.mrtabaofficial.wardline.firebase.PushTokens;
 import io.github.mrtabaofficial.wardline.listeners.ConversionListener;
 import io.github.mrtabaofficial.wardline.models.ChatMessage;
 import io.github.mrtabaofficial.wardline.models.User;
@@ -45,6 +53,8 @@ public class MainActivity extends BaseActivity implements ConversionListener {
     private List<DocumentSnapshot> conversationDocuments = new ArrayList<>();
     private final Map<String, User> userCache = new HashMap<>();
     private final Set<String> pendingUserLoads = new HashSet<>();
+    private final ActivityResultLauncher<String> notificationPermissionLauncher =
+            registerForActivityResult(new ActivityResultContracts.RequestPermission(), granted -> { });
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -63,6 +73,7 @@ public class MainActivity extends BaseActivity implements ConversionListener {
         binding.conversationsRecyclerView.setAdapter(conversationsAdapter);
         loadUserDetails();
         getToken();
+        requestNotificationPermission();
         setListeners();
     }
 
@@ -180,13 +191,17 @@ public class MainActivity extends BaseActivity implements ConversionListener {
     }
 
     private void getToken() {
-        FirebaseMessaging.getInstance().getToken().addOnSuccessListener(this::updateToken);
+        FirebaseMessaging.getInstance().getToken().addOnSuccessListener(token ->
+                PushTokens.save(currentUserId, token)
+                        .addOnFailureListener(e -> Log.w(TAG, "Unable to update the FCM token", e)));
     }
 
-    private void updateToken(String token) {
-        database.collection(Constants.KEY_COLLECTION_USERS).document(currentUserId)
-                .update(Constants.KEY_FCM_TOKEN, token)
-                .addOnFailureListener(e -> Log.w(TAG, "Unable to update the FCM token", e));
+    private void requestNotificationPermission() {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU
+                && ContextCompat.checkSelfPermission(this, Manifest.permission.POST_NOTIFICATIONS)
+                != PackageManager.PERMISSION_GRANTED) {
+            notificationPermissionLauncher.launch(Manifest.permission.POST_NOTIFICATIONS);
+        }
     }
 
     @Override

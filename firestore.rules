@@ -1,0 +1,127 @@
+rules_version = '2';
+
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    function signedIn() {
+      return request.auth != null;
+    }
+
+    function verified() {
+      return signedIn() && request.auth.token.email_verified == true;
+    }
+
+    function isUser(uid) {
+      return signedIn() && request.auth.uid == uid;
+    }
+
+    function validName(data) {
+      return data.name is string && data.name.size() > 0 && data.name.size() <= 50;
+    }
+
+    function validEmail(data) {
+      return data.email is string && data.email.size() <= 254 && data.email == request.auth.token.email;
+    }
+
+    function validImage(data) {
+      return data.image == null || (data.image is string && data.image.size() <= 300000);
+    }
+
+    match /users/{uid} {
+      allow read: if verified();
+
+      allow create: if isUser(uid)
+        && request.resource.data.keys().hasAll(['name', 'email'])
+        && request.resource.data.keys().hasOnly(['name', 'email', 'image'])
+        && validName(request.resource.data)
+        && validEmail(request.resource.data)
+        && (!('image' in request.resource.data) || validImage(request.resource.data));
+
+      allow update: if isUser(uid) && verified() && validProfileUpdate();
+
+      function validProfileUpdate() {
+        let data = request.resource.data;
+        let changed = data.diff(resource.data).affectedKeys();
+        return changed.hasOnly(['name', 'email', 'image', 'availability'])
+          && (!('name' in changed) || validName(data))
+          && (!('email' in changed) || validEmail(data))
+          && (!('image' in changed) || validImage(data))
+          && (!('availability' in changed) || data.availability in [0, 1]);
+      }
+
+      allow delete: if false;
+
+      match /private/{document} {
+        allow read, delete: if isUser(uid) && document == 'messaging';
+        allow create, update: if isUser(uid) && document == 'messaging'
+          && request.resource.data.keys().hasOnly(['fcmToken'])
+          && request.resource.data.fcmToken is string
+          && request.resource.data.fcmToken.size() <= 4096;
+      }
+    }
+
+    match /conversations/{conversationId} {
+
+      function participants() {
+        return conversationId.split('_');
+      }
+
+      function isParticipant() {
+        return verified() && request.auth.uid in participants();
+      }
+
+      function validConversation() {
+        let data = request.resource.data;
+        return data.keys().hasOnly(['participants', 'lastMessage', 'lastSenderId', 'timestamp'])
+          && participants().size() == 2
+          && data.participants == participants()
+          && data.lastMessage is string
+          && data.lastMessage.size() <= 12000;
+      }
+
+      function isNewLastMessage() {
+        return request.resource.data.lastSenderId == request.auth.uid
+          && request.resource.data.timestamp == request.time;
+      }
+
+      function clearsOwnLastMessage() {
+        return request.resource.data.diff(resource.data).affectedKeys().hasOnly(['lastMessage'])
+          && request.resource.data.lastMessage.size() == 0
+          && resource.data.lastSenderId == request.auth.uid;
+      }
+
+      allow read: if verified() && request.auth.uid in resource.data.participants;
+      allow create: if isParticipant() && validConversation() && isNewLastMessage();
+      allow update: if isParticipant() && validConversation()
+        && (isNewLastMessage() || clearsOwnLastMessage());
+      allow delete: if false;
+
+      match /messages/{messageId} {
+        allow read: if isParticipant();
+
+        allow create: if isParticipant()
+          && request.resource.data.keys().hasOnly(['senderId', 'receiverId', 'ciphertext', 'deleted', 'timestamp'])
+          && request.resource.data.senderId == request.auth.uid
+          && request.resource.data.receiverId in participants()
+          && request.resource.data.receiverId != request.auth.uid
+          && request.resource.data.ciphertext is string
+          && request.resource.data.ciphertext.size() > 0
+          && request.resource.data.ciphertext.size() <= 12000
+          && request.resource.data.deleted == false
+          && request.resource.data.timestamp == request.time;
+
+        allow update: if isParticipant()
+          && resource.data.senderId == request.auth.uid
+          && request.resource.data.diff(resource.data).affectedKeys().hasOnly(['deleted', 'ciphertext'])
+          && request.resource.data.deleted == true
+          && request.resource.data.ciphertext.size() == 0;
+
+        allow delete: if false;
+      }
+    }
+
+    match /{document=**} {
+      allow read, write: if false;
+    }
+  }
+}

@@ -1,0 +1,13 @@
+{
+  "name": "wardline-firestore-tests",
+  "description": "Security rules tests for Wardline, run against the Firestore emulator",
+  "private": true,
+  "scripts": {
+    "test": "node --test",
+    "test:emulator": "firebase emulators:exec --only firestore --project demo-wardline --config ../firebase.json \"npm test\""
+  },
+  "devDependencies": {
+    "@firebase/rules-unit-testing": "^6.0.0",
+    "firebase": "^13.0.0"
+  }
+}

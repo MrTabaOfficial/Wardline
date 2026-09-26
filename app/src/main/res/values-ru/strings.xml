@@ -53,4 +53,7 @@
     <string name="message_unavailable">Не удалось расшифровать сообщение</string>
     <string name="error_send_message">Не удалось отправить сообщение</string>
     <string name="error_delete_message">Не удалось удалить сообщение</string>
+    <string name="notification_channel_name">Сообщения чата</string>
+    <string name="notification_channel_description">Уведомления о новых сообщениях</string>
+    <string name="new_encrypted_message">Новое сообщение</string>
 </resources>

@@ -20,7 +20,11 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
 import io.github.mrtabaofficial.wardline.R;
+import io.github.mrtabaofficial.wardline.firebase.PushTokens;
 import io.github.mrtabaofficial.wardline.utilities.Constants;
+import io.github.mrtabaofficial.wardline.utilities.ImageUtils;
+import com.google.android.gms.tasks.Task;
+import com.google.android.gms.tasks.Tasks;
 import io.github.mrtabaofficial.wardline.utilities.PreferenceManager;
 import com.google.firebase.auth.AuthCredential;
 import com.google.firebase.auth.EmailAuthProvider;
@@ -169,10 +173,7 @@ public class UserProfileActivity extends AppCompatActivity {
     }
 
     private void uploadProfilePicture(Bitmap bitmap) {
-        ByteArrayOutputStream baos = new ByteArrayOutputStream();
-        bitmap.compress(Bitmap.CompressFormat.JPEG, 100, baos);
-        byte[] imageBytes = baos.toByteArray();
-        String encodedImage = Base64.encodeToString(imageBytes, Base64.DEFAULT);
+        String encodedImage = ImageUtils.encode(bitmap);
 
         FirebaseFirestore database = FirebaseFirestore.getInstance();
         DocumentReference documentReference = database.collection(Constants.KEY_COLLECTION_USERS)
@@ -247,13 +248,11 @@ public class UserProfileActivity extends AppCompatActivity {
             finishSignOut();
             return;
         }
-        HashMap<String, Object> updates = new HashMap<>();
-        updates.put(Constants.KEY_FCM_TOKEN, FieldValue.delete());
-        updates.put(Constants.KEY_AVAILABILITY, 0);
-        FirebaseFirestore.getInstance()
+        Task<Void> offline = FirebaseFirestore.getInstance()
                 .collection(Constants.KEY_COLLECTION_USERS)
                 .document(user.getUid())
-                .update(updates)
+                .update(Constants.KEY_AVAILABILITY, 0);
+        Tasks.whenAllComplete(offline, PushTokens.delete(user.getUid()))
                 .addOnCompleteListener(task -> finishSignOut());
     }
 

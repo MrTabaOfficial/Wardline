@@ -19,6 +19,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import io.github.mrtabaofficial.wardline.R;
 import io.github.mrtabaofficial.wardline.databinding.ActivitySignUpBinding;
 import io.github.mrtabaofficial.wardline.utilities.Constants;
+import io.github.mrtabaofficial.wardline.utilities.ImageUtils;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.FirebaseFirestore;
@@ -117,16 +118,6 @@ public class SignUpActivity extends AppCompatActivity {
                 .show();
     }
 
-    private String encodeImage(Bitmap bitmap) {
-        int previewWidth = 150;
-        int previewHeight = bitmap.getHeight() * previewWidth / bitmap.getWidth();
-        Bitmap previewBitmap = Bitmap.createScaledBitmap(bitmap, previewWidth, previewHeight, false);
-        ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
-        previewBitmap.compress(Bitmap.CompressFormat.JPEG, 50, byteArrayOutputStream);
-        byte[] bytes = byteArrayOutputStream.toByteArray();
-        return Base64.encodeToString(bytes, Base64.DEFAULT);
-    }
-
     private final ActivityResultLauncher<Intent> pickImage = registerForActivityResult(
             new ActivityResultContracts.StartActivityForResult(),
             result -> {
@@ -138,7 +129,7 @@ public class SignUpActivity extends AppCompatActivity {
                             Bitmap bitmap = BitmapFactory.decodeStream(inputStream);
                             binding.imageProfile.setImageBitmap(bitmap);
                             binding.textAddImage.setVisibility(View.GONE);
-                            encodedImage = encodeImage(bitmap);
+                            encodedImage = ImageUtils.encode(bitmap);
                         } catch (FileNotFoundException e) {
                             e.printStackTrace();
                         }
