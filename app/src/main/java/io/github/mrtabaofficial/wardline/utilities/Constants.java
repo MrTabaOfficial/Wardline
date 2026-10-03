@@ -31,8 +31,8 @@ public class Constants {
     public static final String KEY_IS_SIGNED_IN = "isSignedIn";
     public static final String KEY_USER_ID = "userId";
     public static final String KEY_USER = "user";
-    public static final String KEY_MESSAGE = "message";
-    public static final String KEY_MY_LANG = "My_Lang";
+    public static final String KEY_SETTINGS_PREFERENCE = "Settings";
+    public static final String KEY_DARK_MODE = "Dark_Mode";
 
     public static final int MIN_PASSWORD_LENGTH = 8;
 }

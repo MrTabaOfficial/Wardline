@@ -13,11 +13,11 @@ import android.widget.Toast;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.app.AppCompatDelegate;
+import androidx.core.os.LocaleListCompat;
 
 import io.github.mrtabaofficial.wardline.R;
 import io.github.mrtabaofficial.wardline.databinding.ActivitySignInBinding;
 import io.github.mrtabaofficial.wardline.utilities.Constants;
-import io.github.mrtabaofficial.wardline.utilities.LocaleHelper;
 import io.github.mrtabaofficial.wardline.utilities.PreferenceManager;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -27,6 +27,7 @@ import com.google.firebase.firestore.FirebaseFirestore;
 public class SignInActivity extends AppCompatActivity {
 
     private static final String TAG = "SignInActivity";
+    private static final String LEGACY_LANGUAGE_KEY = "My_Lang";
 
     private ActivitySignInBinding binding;
     private PreferenceManager preferenceManager;
@@ -35,10 +36,7 @@ public class SignInActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
-        // Apply the saved locale before setting the content view
-        LocaleHelper.applySavedLocale(this);
-        applyDarkMode();
+        migrateLegacyLanguage();
 
         preferenceManager = new PreferenceManager(getApplicationContext());
         auth = FirebaseAuth.getInstance();
@@ -54,10 +52,16 @@ public class SignInActivity extends AppCompatActivity {
         setListeners();
     }
 
-    private void applyDarkMode() {
-        SharedPreferences prefs = getSharedPreferences("Settings", MODE_PRIVATE);
-        boolean isDarkMode = prefs.getBoolean("Dark_Mode", false);
-        AppCompatDelegate.setDefaultNightMode(isDarkMode ? AppCompatDelegate.MODE_NIGHT_YES : AppCompatDelegate.MODE_NIGHT_NO);
+    private void migrateLegacyLanguage() {
+        SharedPreferences settings = getSharedPreferences(Constants.KEY_SETTINGS_PREFERENCE, MODE_PRIVATE);
+        String legacyLanguage = settings.getString(LEGACY_LANGUAGE_KEY, null);
+        if (legacyLanguage == null) {
+            return;
+        }
+        settings.edit().remove(LEGACY_LANGUAGE_KEY).apply();
+        if (AppCompatDelegate.getApplicationLocales().isEmpty()) {
+            AppCompatDelegate.setApplicationLocales(LocaleListCompat.forLanguageTags(legacyLanguage));
+        }
     }
 
     private void setListeners() {
@@ -110,6 +114,9 @@ public class SignInActivity extends AppCompatActivity {
                         auth.signOut();
                         showToast(getString(R.string.error_fetch_user));
                         return;
+                    }
+                    if (user.getEmail() != null && !user.getEmail().equals(documentSnapshot.getString(Constants.KEY_EMAIL))) {
+                        documentSnapshot.getReference().update(Constants.KEY_EMAIL, user.getEmail());
                     }
                     preferenceManager.putBoolean(Constants.KEY_IS_SIGNED_IN, true);
                     preferenceManager.putString(Constants.KEY_USER_ID, documentSnapshot.getId());

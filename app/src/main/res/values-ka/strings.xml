@@ -56,4 +56,11 @@
     <string name="notification_channel_name">ჩატის შეტყობინებები</string>
     <string name="notification_channel_description">შეტყობინებები ახალი წერილების შესახებ</string>
     <string name="new_encrypted_message">ახალი შეტყობინება</string>
+    <string name="error_load_image">არჩეული სურათის ჩატვირთვა ვერ მოხერხდა</string>
+    <string name="password_changed">პაროლი შეიცვალა</string>
+    <string name="error_change_password">პაროლის შეცვლა ვერ მოხერხდა. შეამოწმეთ მიმდინარე პაროლი.</string>
+    <string name="profile_picture_updated">პროფილის სურათი განახლდა</string>
+    <string name="error_update_picture">პროფილის სურათის განახლება ვერ მოხერხდა</string>
+    <string name="email_change_link_sent">ახალი ელ-ფოსტის დასადასტურებლად გახსენით ბმული, რომელიც გაიგზავნა მისამართზე %1$s.</string>
+    <string name="error_change_email">ელ-ფოსტის შეცვლა ვერ მოხერხდა. შეამოწმეთ პაროლი და სცადეთ თავიდან.</string>
 </resources>

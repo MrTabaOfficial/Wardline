@@ -16,7 +16,6 @@ import io.github.mrtabaofficial.wardline.R;
 import io.github.mrtabaofficial.wardline.adapters.RecentConversationsAdapter;
 import io.github.mrtabaofficial.wardline.crypto.MessageCipher;
 import io.github.mrtabaofficial.wardline.databinding.ActivityMainBinding;
-import io.github.mrtabaofficial.wardline.firebase.PushTokens;
 import io.github.mrtabaofficial.wardline.listeners.ConversionListener;
 import io.github.mrtabaofficial.wardline.models.ChatMessage;
 import io.github.mrtabaofficial.wardline.models.User;
@@ -72,7 +71,7 @@ public class MainActivity extends BaseActivity implements ConversionListener {
         conversationsAdapter = new RecentConversationsAdapter(this);
         binding.conversationsRecyclerView.setAdapter(conversationsAdapter);
         loadUserDetails();
-        getToken();
+        registerForPush();
         requestNotificationPermission();
         setListeners();
     }
@@ -190,10 +189,9 @@ public class MainActivity extends BaseActivity implements ConversionListener {
                 });
     }
 
-    private void getToken() {
-        FirebaseMessaging.getInstance().getToken().addOnSuccessListener(token ->
-                PushTokens.save(currentUserId, token)
-                        .addOnFailureListener(e -> Log.w(TAG, "Unable to update the FCM token", e)));
+    private void registerForPush() {
+        FirebaseMessaging.getInstance().register()
+                .addOnFailureListener(e -> Log.w(TAG, "Unable to register for push notifications", e));
     }
 
     private void requestNotificationPermission() {

@@ -56,4 +56,11 @@
     <string name="notification_channel_name">Сообщения чата</string>
     <string name="notification_channel_description">Уведомления о новых сообщениях</string>
     <string name="new_encrypted_message">Новое сообщение</string>
+    <string name="error_load_image">Не удалось загрузить выбранное изображение</string>
+    <string name="password_changed">Пароль изменён</string>
+    <string name="error_change_password">Не удалось изменить пароль. Проверьте текущий пароль.</string>
+    <string name="profile_picture_updated">Фото профиля обновлено</string>
+    <string name="error_update_picture">Не удалось обновить фото профиля</string>
+    <string name="email_change_link_sent">Перейдите по ссылке, отправленной на %1$s, чтобы подтвердить новый адрес.</string>
+    <string name="error_change_email">Не удалось изменить адрес. Проверьте пароль и попробуйте ещё раз.</string>
 </resources>

@@ -58,4 +58,11 @@
     <string name="notification_channel_name">Chat messages</string>
     <string name="notification_channel_description">Notifications for new chat messages</string>
     <string name="new_encrypted_message">New message</string>
+    <string name="error_load_image">Unable to load the selected image</string>
+    <string name="password_changed">Password changed</string>
+    <string name="error_change_password">Unable to change the password. Check your current password.</string>
+    <string name="profile_picture_updated">Profile picture updated</string>
+    <string name="error_update_picture">Unable to update the profile picture</string>
+    <string name="email_change_link_sent">Open the link sent to %1$s to confirm your new email.</string>
+    <string name="error_change_email">Unable to change the email. Check your password and try again.</string>
 </resources>

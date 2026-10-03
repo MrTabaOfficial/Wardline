@@ -34,7 +34,7 @@ public class UsersActivity extends BaseActivity implements UserListener {
         getUsers();
     }
     private void setListeners() {
-        binding.imageBack.setOnClickListener(v -> onBackPressed());
+        binding.imageBack.setOnClickListener(v -> getOnBackPressedDispatcher().onBackPressed());
     }
     private void getUsers() {
         loading(true);

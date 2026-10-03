@@ -1,258 +1,174 @@
 package io.github.mrtabaofficial.wardline.activities;
 
-import android.app.AlertDialog;
 import android.content.Intent;
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Bundle;
-import android.provider.MediaStore;
-import android.util.Base64;
+import android.util.Log;
+import android.util.Patterns;
 import android.view.View;
-import android.widget.Button;
 import android.widget.EditText;
-import android.widget.ImageView;
-import android.widget.TextView;
 import android.widget.Toast;
 
-
-import androidx.annotation.Nullable;
-import androidx.appcompat.app.AppCompatActivity;
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.PickVisualMediaRequest;
+import androidx.activity.result.contract.ActivityResultContracts;
+import androidx.appcompat.app.AlertDialog;
 
 import io.github.mrtabaofficial.wardline.R;
+import io.github.mrtabaofficial.wardline.databinding.ActivityUserProfileBinding;
 import io.github.mrtabaofficial.wardline.firebase.PushTokens;
 import io.github.mrtabaofficial.wardline.utilities.Constants;
 import io.github.mrtabaofficial.wardline.utilities.ImageUtils;
+import io.github.mrtabaofficial.wardline.utilities.PreferenceManager;
 import com.google.android.gms.tasks.Task;
 import com.google.android.gms.tasks.Tasks;
-import io.github.mrtabaofficial.wardline.utilities.PreferenceManager;
 import com.google.firebase.auth.AuthCredential;
 import com.google.firebase.auth.EmailAuthProvider;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.DocumentReference;
-import com.google.firebase.firestore.FieldValue;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.messaging.FirebaseMessaging;
 
-import java.io.ByteArrayOutputStream;
 import java.io.IOException;
-import java.util.HashMap;
 
-public class UserProfileActivity extends AppCompatActivity {
+public class UserProfileActivity extends BaseActivity {
 
-    private static final int PICK_IMAGE_REQUEST = 1;
+    private static final String TAG = "UserProfileActivity";
 
+    private ActivityUserProfileBinding binding;
     private PreferenceManager preferenceManager;
-    private ImageView imageProfile;
-    private TextView textName, textEmail;
-    private Button btnChangePassword, btnLogout, btnChangeProfilePicture, btnChangeEmail;
+    private FirebaseUser user;
+    private DocumentReference userDocument;
+
+    private final ActivityResultLauncher<PickVisualMediaRequest> pickImage = registerForActivityResult(
+            new ActivityResultContracts.PickVisualMedia(), this::onImagePicked);
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_user_profile);
+        if (isFinishing()) {
+            return;
+        }
+        binding = ActivityUserProfileBinding.inflate(getLayoutInflater());
+        setContentView(binding.getRoot());
 
         preferenceManager = new PreferenceManager(getApplicationContext());
-
-        imageProfile = findViewById(R.id.imageProfile);
-        textName = findViewById(R.id.textName);
-        textEmail = findViewById(R.id.textEmail);
-        btnChangePassword = findViewById(R.id.btnChangePassword);
-        btnLogout = findViewById(R.id.btnLogout);
-        btnChangeProfilePicture = findViewById(R.id.btnChangeProfilePicture);
-        btnChangeEmail = findViewById(R.id.btnChangeEmail);
+        user = FirebaseAuth.getInstance().getCurrentUser();
+        userDocument = FirebaseFirestore.getInstance()
+                .collection(Constants.KEY_COLLECTION_USERS)
+                .document(user.getUid());
 
         loadUserDetails();
 
-        btnChangePassword.setOnClickListener(v -> showChangePasswordDialog());
-        btnLogout.setOnClickListener(v -> signOut());
-        btnChangeProfilePicture.setOnClickListener(v -> openImagePicker());
-        btnChangeEmail.setOnClickListener(v -> showChangeEmailDialog());
+        binding.btnChangePassword.setOnClickListener(v -> showChangePasswordDialog());
+        binding.btnLogout.setOnClickListener(v -> signOut());
+        binding.btnChangeProfilePicture.setOnClickListener(v -> pickImage.launch(new PickVisualMediaRequest.Builder()
+                .setMediaType(ActivityResultContracts.PickVisualMedia.ImageOnly.INSTANCE)
+                .build()));
+        binding.btnChangeEmail.setOnClickListener(v -> showChangeEmailDialog());
     }
+
     private void loadUserDetails() {
-        FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
-        if (user != null) {
-            textName.setText(preferenceManager.getString(Constants.KEY_NAME));
-            textEmail.setText(user.getEmail());
-        }
-
-        String encodedImage = preferenceManager.getString(Constants.KEY_IMAGE);
-        if (encodedImage != null) {
-            byte[] bytes = Base64.decode(encodedImage, Base64.DEFAULT);
-            Bitmap bitmap = BitmapFactory.decodeByteArray(bytes, 0, bytes.length);
-            imageProfile.setImageBitmap(bitmap);
-        }
-
-        FirebaseFirestore database = FirebaseFirestore.getInstance();
-        DocumentReference documentReference = database.collection(Constants.KEY_COLLECTION_USERS)
-                .document(preferenceManager.getString(Constants.KEY_USER_ID));
-        documentReference.get()
-                .addOnSuccessListener(documentSnapshot -> {
-                    if (documentSnapshot.exists()) {
-                        String email = documentSnapshot.getString(Constants.KEY_EMAIL);
-                        if (email != null) {
-                            textEmail.setText(email);
-                        }
-                    }
-                });
+        binding.textName.setText(preferenceManager.getString(Constants.KEY_NAME));
+        binding.textEmail.setText(user.getEmail());
+        binding.imageProfile.setImageBitmap(ImageUtils.decode(preferenceManager.getString(Constants.KEY_IMAGE)));
     }
 
     private void showChangePasswordDialog() {
-        AlertDialog.Builder builder = new AlertDialog.Builder(this);
         View view = getLayoutInflater().inflate(R.layout.dialog_change_password, null);
-        builder.setView(view);
-
         EditText editOldPassword = view.findViewById(R.id.editOldPassword);
         EditText editNewPassword = view.findViewById(R.id.editNewPassword);
         EditText editConfirmPassword = view.findViewById(R.id.editConfirmPassword);
 
-        builder.setPositiveButton("Change Password", (dialog, which) -> {
-            String oldPassword = editOldPassword.getText().toString().trim();
-            String newPassword = editNewPassword.getText().toString().trim();
-            String confirmPassword = editConfirmPassword.getText().toString().trim();
+        new AlertDialog.Builder(this)
+                .setTitle(R.string.change_password)
+                .setView(view)
+                .setPositiveButton(R.string.change_password, (dialog, which) -> {
+                    String oldPassword = editOldPassword.getText().toString();
+                    String newPassword = editNewPassword.getText().toString();
+                    if (newPassword.length() < Constants.MIN_PASSWORD_LENGTH) {
+                        showToast(getString(R.string.error_password_too_short, Constants.MIN_PASSWORD_LENGTH));
+                    } else if (!newPassword.equals(editConfirmPassword.getText().toString())) {
+                        showToast(getString(R.string.error_password_mismatch));
+                    } else {
+                        changePassword(oldPassword, newPassword);
+                    }
+                })
+                .setNegativeButton(android.R.string.cancel, (dialog, which) -> dialog.dismiss())
+                .show();
+    }
 
-            if (newPassword.equals(confirmPassword)) {
-                changePassword(oldPassword, newPassword);
-            } else {
-                Toast.makeText(UserProfileActivity.this, "Passwords do not match", Toast.LENGTH_SHORT).show();
-            }
-        });
-
-        builder.setNegativeButton("Cancel", (dialog, which) -> dialog.dismiss());
-
-        AlertDialog dialog = builder.create();
-        dialog.show();
+    private Task<Void> reauthenticate(String password) {
+        AuthCredential credential = EmailAuthProvider.getCredential(user.getEmail(), password);
+        return user.reauthenticate(credential);
     }
 
     private void changePassword(String oldPassword, String newPassword) {
-        FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+        reauthenticate(oldPassword)
+                .onSuccessTask(unused -> user.updatePassword(newPassword))
+                .addOnCompleteListener(task -> showToast(getString(task.isSuccessful()
+                        ? R.string.password_changed
+                        : R.string.error_change_password)));
+    }
 
-        if (user != null) {
-            AuthCredential credential = EmailAuthProvider.getCredential(user.getEmail(), oldPassword);
-
-            user.reauthenticate(credential)
-                    .addOnCompleteListener(task -> {
-                        if (task.isSuccessful()) {
-                            user.updatePassword(newPassword)
-                                    .addOnCompleteListener(task1 -> {
-                                        if (task1.isSuccessful()) {
-                                            Toast.makeText(UserProfileActivity.this, "Password changed successfully", Toast.LENGTH_SHORT).show();
-                                        } else {
-                                            Toast.makeText(UserProfileActivity.this, "Error: " + task1.getException().getMessage(), Toast.LENGTH_SHORT).show();
-                                        }
-                                    });
-                        } else {
-                            Toast.makeText(UserProfileActivity.this, "Error: " + task.getException().getMessage(), Toast.LENGTH_SHORT).show();
-                        }
-                    });
-        } else {
-            Toast.makeText(this, "User not logged in", Toast.LENGTH_SHORT).show();
+    private void onImagePicked(Uri imageUri) {
+        if (imageUri == null) {
+            return;
         }
-    }
-
-    private void openImagePicker() {
-        Intent intent = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
-        startActivityForResult(intent, PICK_IMAGE_REQUEST);
-    }
-
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-        if (requestCode == PICK_IMAGE_REQUEST && resultCode == RESULT_OK && data != null) {
-            Uri imageUri = data.getData();
-            if (imageUri != null) {
-                try {
-                    Bitmap bitmap = MediaStore.Images.Media.getBitmap(this.getContentResolver(), imageUri);
-                    imageProfile.setImageBitmap(bitmap);
-                    uploadProfilePicture(bitmap);
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-            }
+        try {
+            Bitmap bitmap = ImageUtils.load(getContentResolver(), imageUri);
+            uploadProfilePicture(bitmap);
+        } catch (IOException e) {
+            Log.w(TAG, "Unable to load the selected image", e);
+            showToast(getString(R.string.error_load_image));
         }
     }
 
     private void uploadProfilePicture(Bitmap bitmap) {
         String encodedImage = ImageUtils.encode(bitmap);
-
-        FirebaseFirestore database = FirebaseFirestore.getInstance();
-        DocumentReference documentReference = database.collection(Constants.KEY_COLLECTION_USERS)
-                .document(preferenceManager.getString(Constants.KEY_USER_ID));
-        documentReference.update(Constants.KEY_IMAGE, encodedImage)
+        userDocument.update(Constants.KEY_IMAGE, encodedImage)
                 .addOnSuccessListener(unused -> {
                     preferenceManager.putString(Constants.KEY_IMAGE, encodedImage);
-                    Toast.makeText(UserProfileActivity.this, "Profile picture updated", Toast.LENGTH_SHORT).show();
+                    binding.imageProfile.setImageBitmap(ImageUtils.decode(encodedImage));
+                    showToast(getString(R.string.profile_picture_updated));
                 })
-                .addOnFailureListener(e -> Toast.makeText(UserProfileActivity.this, "Unable to update profile picture", Toast.LENGTH_SHORT).show());
+                .addOnFailureListener(e -> showToast(getString(R.string.error_update_picture)));
     }
 
     private void showChangeEmailDialog() {
-        AlertDialog.Builder builder = new AlertDialog.Builder(this);
         View view = getLayoutInflater().inflate(R.layout.dialog_change_email, null);
-        builder.setView(view);
-
         EditText editCurrentPassword = view.findViewById(R.id.editCurrentPassword);
         EditText editNewEmail = view.findViewById(R.id.editNewEmail);
 
-        builder.setPositiveButton("Change Email", (dialog, which) -> {
-            String currentPassword = editCurrentPassword.getText().toString().trim();
-            String newEmail = editNewEmail.getText().toString().trim();
-
-            changeEmail(currentPassword, newEmail);
-        });
-
-        builder.setNegativeButton("Cancel", (dialog, which) -> dialog.dismiss());
-
-        AlertDialog dialog = builder.create();
-        dialog.show();
+        new AlertDialog.Builder(this)
+                .setTitle(R.string.change_email)
+                .setView(view)
+                .setPositiveButton(R.string.change_email, (dialog, which) -> {
+                    String newEmail = editNewEmail.getText().toString().trim();
+                    if (!Patterns.EMAIL_ADDRESS.matcher(newEmail).matches()) {
+                        showToast(getString(R.string.error_invalid_email));
+                        return;
+                    }
+                    changeEmail(editCurrentPassword.getText().toString(), newEmail);
+                })
+                .setNegativeButton(android.R.string.cancel, (dialog, which) -> dialog.dismiss())
+                .show();
     }
 
     private void changeEmail(String currentPassword, String newEmail) {
-        FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
-
-        if (user != null) {
-            AuthCredential credential = EmailAuthProvider.getCredential(user.getEmail(), currentPassword);
-
-            user.reauthenticate(credential)
-                    .addOnCompleteListener(task -> {
-                        if (task.isSuccessful()) {
-                            user.updateEmail(newEmail)
-                                    .addOnCompleteListener(task1 -> {
-                                        if (task1.isSuccessful()) {
-                                            FirebaseFirestore database = FirebaseFirestore.getInstance();
-                                            DocumentReference documentReference = database.collection(Constants.KEY_COLLECTION_USERS)
-                                                    .document(preferenceManager.getString(Constants.KEY_USER_ID));
-                                            documentReference.update(Constants.KEY_EMAIL, newEmail)
-                                                    .addOnSuccessListener(unused -> {
-                                                        preferenceManager.putString(Constants.KEY_EMAIL, newEmail);
-                                                        textEmail.setText(newEmail);
-                                                        Toast.makeText(UserProfileActivity.this, "Email changed successfully", Toast.LENGTH_SHORT).show();
-                                                    })
-                                                    .addOnFailureListener(e -> Toast.makeText(UserProfileActivity.this, "Unable to update email", Toast.LENGTH_SHORT).show());
-                                        } else {
-                                            Toast.makeText(UserProfileActivity.this, "Error: " + task1.getException().getMessage(), Toast.LENGTH_SHORT).show();
-                                        }
-                                    });
-                        } else {
-                            Toast.makeText(UserProfileActivity.this, "Error: " + task.getException().getMessage(), Toast.LENGTH_SHORT).show();
-                        }
-                    });
-        } else {
-            Toast.makeText(this, "User not logged in", Toast.LENGTH_SHORT).show();
-        }
+        reauthenticate(currentPassword)
+                .onSuccessTask(unused -> user.verifyBeforeUpdateEmail(newEmail))
+                .addOnCompleteListener(task -> showToast(task.isSuccessful()
+                        ? getString(R.string.email_change_link_sent, newEmail)
+                        : getString(R.string.error_change_email)));
     }
 
     private void signOut() {
-        FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
-        if (user == null) {
-            finishSignOut();
-            return;
-        }
-        Task<Void> offline = FirebaseFirestore.getInstance()
-                .collection(Constants.KEY_COLLECTION_USERS)
-                .document(user.getUid())
-                .update(Constants.KEY_AVAILABILITY, 0);
-        Tasks.whenAllComplete(offline, PushTokens.delete(user.getUid()))
+        Task<Void> offline = userDocument.update(Constants.KEY_AVAILABILITY, 0);
+        Tasks.whenAllComplete(offline, PushTokens.delete(user.getUid()),
+                        FirebaseMessaging.getInstance().unregister())
                 .addOnCompleteListener(task -> finishSignOut());
     }
 
@@ -263,5 +179,9 @@ public class UserProfileActivity extends AppCompatActivity {
         intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
         startActivity(intent);
         finish();
+    }
+
+    private void showToast(String message) {
+        Toast.makeText(getApplicationContext(), message, Toast.LENGTH_SHORT).show();
     }
 }

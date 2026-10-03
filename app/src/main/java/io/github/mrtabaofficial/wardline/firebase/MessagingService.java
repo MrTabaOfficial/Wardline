@@ -32,12 +32,12 @@ public class MessagingService extends FirebaseMessagingService {
     private static final String CHANNEL_ID = "chat_message";
 
     @Override
-    public void onNewToken(@NonNull String token) {
-        super.onNewToken(token);
+    public void onRegistered(@NonNull String registrationId) {
+        super.onRegistered(registrationId);
         FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
         if (user != null) {
-            PushTokens.save(user.getUid(), token)
-                    .addOnFailureListener(e -> Log.w(TAG, "Unable to store the new FCM token", e));
+            PushTokens.save(user.getUid(), registrationId)
+                    .addOnFailureListener(e -> Log.w(TAG, "Unable to store the push registration", e));
         }
     }
 

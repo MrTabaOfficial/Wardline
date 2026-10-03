@@ -5,18 +5,15 @@ import android.content.SharedPreferences;
 
 import androidx.appcompat.app.AppCompatDelegate;
 
-import io.github.mrtabaofficial.wardline.utilities.LocaleHelper;
+import io.github.mrtabaofficial.wardline.utilities.Constants;
 
 public class MyApplication extends Application {
     @Override
     public void onCreate() {
         super.onCreate();
-        LocaleHelper.applySavedLocale(this);
-        applyDarkMode();
-    }
-    private void applyDarkMode() {
-        SharedPreferences prefs = getSharedPreferences("Settings", MODE_PRIVATE);
-        boolean isDarkMode = prefs.getBoolean("Dark_Mode", false);
-        AppCompatDelegate.setDefaultNightMode(isDarkMode ? AppCompatDelegate.MODE_NIGHT_YES : AppCompatDelegate.MODE_NIGHT_NO);
+        SharedPreferences settings = getSharedPreferences(Constants.KEY_SETTINGS_PREFERENCE, MODE_PRIVATE);
+        AppCompatDelegate.setDefaultNightMode(settings.getBoolean(Constants.KEY_DARK_MODE, false)
+                ? AppCompatDelegate.MODE_NIGHT_YES
+                : AppCompatDelegate.MODE_NIGHT_NO);
     }
 }
