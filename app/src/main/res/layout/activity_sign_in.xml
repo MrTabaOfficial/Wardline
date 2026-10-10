@@ -1,137 +1,140 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".activities.SignInActivity">
-    <ScrollView
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
+
+    <androidx.core.widget.NestedScrollView
+        android:layout_width="0dp"
+        android:layout_height="0dp"
         android:clipToPadding="false"
+        android:fillViewport="true"
         android:overScrollMode="never"
-        android:padding="@dimen/_24sdp"
-        android:scrollbars="none">
+        android:scrollbars="none"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:gravity="center_horizontal"
-            android:orientation="vertical">
+            android:orientation="vertical"
+            android:paddingHorizontal="24dp"
+            android:paddingVertical="32dp">
+
+            <ImageView
+                android:layout_width="88dp"
+                android:layout_height="88dp"
+                android:layout_marginTop="32dp"
+                android:importantForAccessibility="no"
+                android:src="@drawable/ic_mainic"
+                app:tint="?attr/colorPrimary" />
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/_40sdp"
+                android:layout_marginTop="24dp"
                 android:text="@string/welcome_back"
                 android:textAlignment="center"
-                android:textColor="?android:textColorPrimary"
-                android:textSize="@dimen/_18ssp"
-                android:textStyle="bold" />
+                android:textAppearance="?attr/textAppearanceHeadlineMedium"
+                android:textColor="?attr/colorOnSurface" />
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/_4sdp"
+                android:layout_marginTop="8dp"
                 android:text="@string/login_to_continue"
-                android:textColor="?android:textColorSecondary"
-                android:textSize="@dimen/_12ssp"
-                android:textStyle="bold" />
+                android:textAlignment="center"
+                android:textAppearance="?attr/textAppearanceBodyLarge"
+                android:textColor="?attr/colorOnSurfaceVariant" />
 
-            <EditText
-                android:id="@+id/inputEmail"
+            <com.google.android.material.textfield.TextInputLayout
+                style="?attr/textInputOutlinedStyle"
                 android:layout_width="match_parent"
-                android:layout_height="@dimen/_45sdp"
-                android:layout_marginTop="@dimen/_40sdp"
-                android:background="@drawable/backgrund_input"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="40dp"
                 android:hint="@string/email"
-                android:imeOptions="actionNext"
-                android:importantForAutofill="no"
-                android:inputType="textEmailAddress"
-                android:paddingStart="@dimen/_16sdp"
-                android:paddingEnd="@dimen/_16sdp"
-                android:textColor="@color/primary"
-                android:textColorHint="@color/on_secondary"
-                android:textSize="@dimen/_13ssp" />
+                app:startIconDrawable="@drawable/ic_email">
 
-            <EditText
-                android:id="@+id/inputPassword"
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/inputEmail"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:autofillHints="emailAddress"
+                    android:imeOptions="actionNext"
+                    android:inputType="textEmailAddress" />
+            </com.google.android.material.textfield.TextInputLayout>
+
+            <com.google.android.material.textfield.TextInputLayout
+                style="?attr/textInputOutlinedStyle"
                 android:layout_width="match_parent"
-                android:layout_height="@dimen/_45sdp"
-                android:layout_marginTop="@dimen/_16sdp"
-                android:background="@drawable/backgrund_input"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
                 android:hint="@string/password"
-                android:imeOptions="actionDone"
-                android:importantForAutofill="no"
-                android:inputType="textPassword"
-                android:paddingStart="@dimen/_16sdp"
-                android:paddingEnd="@dimen/_16sdp"
-                android:textColor="@color/primary"
-                android:textColorHint="@color/on_secondary"
-                android:textSize="@dimen/_13ssp" />
+                app:endIconMode="password_toggle"
+                app:startIconDrawable="@drawable/ic_lock">
+
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/inputPassword"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:autofillHints="password"
+                    android:imeOptions="actionDone"
+                    android:inputType="textPassword" />
+            </com.google.android.material.textfield.TextInputLayout>
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/textForgotPassword"
+                style="@style/Widget.Material3.Button.TextButton"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="end"
+                android:layout_marginTop="4dp"
+                android:text="@string/forgot_password" />
 
             <FrameLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/_20sdp"
+                android:layout_marginTop="16dp"
                 android:animateLayoutChanges="true">
 
                 <com.google.android.material.button.MaterialButton
                     android:id="@+id/buttonSignIn"
                     android:layout_width="match_parent"
-                    android:layout_height="@dimen/_50sdp"
-                    android:layout_marginTop="@dimen/_20sdp"
-                    android:text="@string/sign_in"
-                    android:textColor="@color/white"
-                    android:textSize="@dimen/_13ssp"
-                    android:textStyle="bold"
-                    app:cornerRadius="@dimen/_8sdp" />
+                    android:layout_height="56dp"
+                    android:text="@string/sign_in" />
 
-                <ProgressBar
+                <com.google.android.material.progressindicator.CircularProgressIndicator
                     android:id="@+id/progressBar"
-                    android:layout_width="@dimen/_25sdp"
-                    android:layout_height="@dimen/_25sdp"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
                     android:layout_gravity="center"
+                    android:indeterminate="true"
                     android:visibility="invisible" />
-
             </FrameLayout>
 
-            <TextView
-                android:id="@+id/textForgotPassword"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="40dp"
-                android:text="@string/forgot_password"
-                android:textColor="?android:textColorPrimary"
-                android:textSize="14sp"
-                android:textStyle="bold" />
-
-            <TextView
+            <com.google.android.material.button.MaterialButton
                 android:id="@+id/textCreateNewAccount"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/_30sdp"
-                android:text="@string/create_new_account"
-                android:textColor="?android:textColorPrimary"
-                android:textSize="@dimen/_13ssp"
-                android:textStyle="bold" />
-
+                style="@style/Widget.Material3.Button.OutlinedButton"
+                android:layout_width="match_parent"
+                android:layout_height="56dp"
+                android:layout_marginTop="12dp"
+                android:text="@string/create_new_account" />
         </LinearLayout>
+    </androidx.core.widget.NestedScrollView>
 
-    </ScrollView>
-
-    <com.google.android.material.floatingactionbutton.FloatingActionButton
-    android:id="@+id/btnSettings"
-    android:layout_width="wrap_content"
-    android:layout_height="wrap_content"
-    android:layout_marginEnd="@dimen/_24sdp"
-    android:layout_marginRight="@dimen/_24sdp"
-    android:layout_marginBottom="@dimen/_24sdp"
-    android:contentDescription="@string/app_name"
-    android:src="@drawable/ic_settings"
-    app:backgroundTint="@color/primary"
-    app:layout_constraintBottom_toBottomOf="parent"
-    app:layout_constraintEnd_toEndOf="parent"
-    app:tint="@color/white" />
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/btnSettings"
+        style="@style/Widget.App.IconButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_margin="8dp"
+        android:contentDescription="@string/settings"
+        app:icon="@drawable/ic_settings"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 </androidx.constraintlayout.widget.ConstraintLayout>

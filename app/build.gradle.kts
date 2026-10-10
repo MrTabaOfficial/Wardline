@@ -63,10 +63,6 @@ dependencies {
     implementation(libs.firebase.firestore)
     implementation(libs.firebase.messaging)
 
-    implementation(libs.sdp.android)
-    implementation(libs.ssp.android)
-    implementation(libs.roundedimageview)
-
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.test.junit)
     androidTestImplementation(libs.androidx.test.espresso.core)

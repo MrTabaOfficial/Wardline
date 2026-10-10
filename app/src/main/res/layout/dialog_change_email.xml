@@ -1,21 +1,41 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:orientation="vertical"
-    android:padding="16dp">
+    android:paddingHorizontal="24dp"
+    android:paddingTop="16dp">
 
-    <EditText
-        android:id="@+id/editCurrentPassword"
+    <com.google.android.material.textfield.TextInputLayout
+        style="?attr/textInputOutlinedStyle"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:hint="Current Password"
-        android:inputType="textPassword" />
+        android:hint="@string/new_email"
+        app:startIconDrawable="@drawable/ic_email">
 
-    <EditText
-        android:id="@+id/editNewEmail"
+        <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/editNewEmail"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:autofillHints="emailAddress"
+            android:inputType="textEmailAddress" />
+    </com.google.android.material.textfield.TextInputLayout>
+
+    <com.google.android.material.textfield.TextInputLayout
+        style="?attr/textInputOutlinedStyle"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:hint="New Email"
-        android:inputType="textEmailAddress" />
+        android:layout_marginTop="12dp"
+        android:hint="@string/current_password"
+        app:endIconMode="password_toggle"
+        app:startIconDrawable="@drawable/ic_lock">
+
+        <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/editCurrentPassword"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:autofillHints="password"
+            android:inputType="textPassword" />
+    </com.google.android.material.textfield.TextInputLayout>
 </LinearLayout>

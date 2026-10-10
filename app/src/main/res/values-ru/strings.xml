@@ -15,9 +15,7 @@
     <string name="online">Активен</string>
     <string name="select_language">Выберите язык</string>
     <string name="save">Сохранять</string>
-    <string name="enable_dark_mode">Включить темный режим</string>
     <string name="dark_mode">Темный режим</string>
-    <string name="save_password">Сохранить пароль</string>
     <string name="new_password">Новый пароль</string>
     <string name="old_password">Старый пароль</string>
     <string name="change_password">Изменить пароль</string>
@@ -40,7 +38,6 @@
     <string name="error_enter_email">Введите адрес электронной почты</string>
     <string name="error_invalid_email">Введите корректный адрес электронной почты</string>
     <string name="error_enter_password">Введите пароль</string>
-    <string name="error_password_too_short">Пароль должен содержать не менее %1$d символов</string>
     <string name="error_password_mismatch">Пароли не совпадают</string>
     <string name="error_select_image">Выберите фото профиля</string>
     <string name="error_invalid_credentials">Неверный адрес или пароль</string>
@@ -63,4 +60,22 @@
     <string name="error_update_picture">Не удалось обновить фото профиля</string>
     <string name="email_change_link_sent">Перейдите по ссылке, отправленной на %1$s, чтобы подтвердить новый адрес.</string>
     <string name="error_change_email">Не удалось изменить адрес. Проверьте пароль и попробуйте ещё раз.</string>
+    <string name="password_requirements">Не менее 8 символов</string>
+    <string name="already_have_account">Уже есть аккаунт? Войти</string>
+    <string name="profile">Профиль</string>
+    <string name="profile_picture">Фото профиля</string>
+    <string name="chats">Чаты</string>
+    <string name="new_chat">Новый чат</string>
+    <string name="no_conversations">Пока нет переписок. Нажмите «Новый чат», чтобы начать.</string>
+    <string name="contact_info">Информация о контакте</string>
+    <string name="appearance">Оформление</string>
+    <string name="language">Язык</string>
+    <string name="new_email">Новый адрес</string>
+    <string name="current_password">Текущий пароль</string>
+    <plurals name="error_password_too_short">
+        <item quantity="one">Пароль должен содержать не менее %d символа</item>
+        <item quantity="few">Пароль должен содержать не менее %d символов</item>
+        <item quantity="many">Пароль должен содержать не менее %d символов</item>
+        <item quantity="other">Пароль должен содержать не менее %d символа</item>
+    </plurals>
 </resources>

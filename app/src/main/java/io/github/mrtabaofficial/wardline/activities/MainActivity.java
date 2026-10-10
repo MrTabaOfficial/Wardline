@@ -22,6 +22,7 @@ import io.github.mrtabaofficial.wardline.models.User;
 import io.github.mrtabaofficial.wardline.utilities.Constants;
 import io.github.mrtabaofficial.wardline.utilities.ImageUtils;
 import io.github.mrtabaofficial.wardline.utilities.PreferenceManager;
+import io.github.mrtabaofficial.wardline.utilities.SystemBars;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
@@ -63,6 +64,7 @@ public class MainActivity extends BaseActivity implements ConversionListener {
         }
         binding = ActivityMainBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
+        SystemBars.applyEdgeToEdge(this, binding.getRoot());
         preferenceManager = new PreferenceManager(getApplicationContext());
         database = FirebaseFirestore.getInstance();
         currentUserId = Objects.requireNonNull(FirebaseAuth.getInstance().getCurrentUser()).getUid();
@@ -128,7 +130,8 @@ public class MainActivity extends BaseActivity implements ConversionListener {
         }
         Collections.sort(conversations, (obj1, obj2) -> obj2.dataObject.compareTo(obj1.dataObject));
         conversationsAdapter.submitList(conversations);
-        binding.conversationsRecyclerView.setVisibility(View.VISIBLE);
+        binding.conversationsRecyclerView.setVisibility(conversations.isEmpty() ? View.GONE : View.VISIBLE);
+        binding.textNoConversations.setVisibility(conversations.isEmpty() ? View.VISIBLE : View.GONE);
     }
 
     private ChatMessage toConversation(DocumentSnapshot document) {

@@ -13,7 +13,6 @@ import android.widget.Toast;
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.PickVisualMediaRequest;
 import androidx.activity.result.contract.ActivityResultContracts;
-import androidx.appcompat.app.AlertDialog;
 
 import io.github.mrtabaofficial.wardline.R;
 import io.github.mrtabaofficial.wardline.databinding.ActivityUserProfileBinding;
@@ -21,8 +20,10 @@ import io.github.mrtabaofficial.wardline.firebase.PushTokens;
 import io.github.mrtabaofficial.wardline.utilities.Constants;
 import io.github.mrtabaofficial.wardline.utilities.ImageUtils;
 import io.github.mrtabaofficial.wardline.utilities.PreferenceManager;
+import io.github.mrtabaofficial.wardline.utilities.SystemBars;
 import com.google.android.gms.tasks.Task;
 import com.google.android.gms.tasks.Tasks;
+import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 import com.google.firebase.auth.AuthCredential;
 import com.google.firebase.auth.EmailAuthProvider;
 import com.google.firebase.auth.FirebaseAuth;
@@ -53,6 +54,7 @@ public class UserProfileActivity extends BaseActivity {
         }
         binding = ActivityUserProfileBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
+        SystemBars.applyEdgeToEdge(this, binding.getRoot());
 
         preferenceManager = new PreferenceManager(getApplicationContext());
         user = FirebaseAuth.getInstance().getCurrentUser();
@@ -62,6 +64,7 @@ public class UserProfileActivity extends BaseActivity {
 
         loadUserDetails();
 
+        binding.imageBack.setOnClickListener(v -> finish());
         binding.btnChangePassword.setOnClickListener(v -> showChangePasswordDialog());
         binding.btnLogout.setOnClickListener(v -> signOut());
         binding.btnChangeProfilePicture.setOnClickListener(v -> pickImage.launch(new PickVisualMediaRequest.Builder()
@@ -82,14 +85,14 @@ public class UserProfileActivity extends BaseActivity {
         EditText editNewPassword = view.findViewById(R.id.editNewPassword);
         EditText editConfirmPassword = view.findViewById(R.id.editConfirmPassword);
 
-        new AlertDialog.Builder(this)
+        new MaterialAlertDialogBuilder(this)
                 .setTitle(R.string.change_password)
                 .setView(view)
                 .setPositiveButton(R.string.change_password, (dialog, which) -> {
                     String oldPassword = editOldPassword.getText().toString();
                     String newPassword = editNewPassword.getText().toString();
                     if (newPassword.length() < Constants.MIN_PASSWORD_LENGTH) {
-                        showToast(getString(R.string.error_password_too_short, Constants.MIN_PASSWORD_LENGTH));
+                        showToast(getResources().getQuantityString(R.plurals.error_password_too_short, Constants.MIN_PASSWORD_LENGTH, Constants.MIN_PASSWORD_LENGTH));
                     } else if (!newPassword.equals(editConfirmPassword.getText().toString())) {
                         showToast(getString(R.string.error_password_mismatch));
                     } else {
@@ -142,7 +145,7 @@ public class UserProfileActivity extends BaseActivity {
         EditText editCurrentPassword = view.findViewById(R.id.editCurrentPassword);
         EditText editNewEmail = view.findViewById(R.id.editNewEmail);
 
-        new AlertDialog.Builder(this)
+        new MaterialAlertDialogBuilder(this)
                 .setTitle(R.string.change_email)
                 .setView(view)
                 .setPositiveButton(R.string.change_email, (dialog, which) -> {

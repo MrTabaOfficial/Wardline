@@ -10,7 +10,6 @@ import android.view.View;
 import android.widget.EditText;
 import android.widget.Toast;
 
-import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.app.AppCompatDelegate;
 import androidx.core.os.LocaleListCompat;
@@ -19,6 +18,8 @@ import io.github.mrtabaofficial.wardline.R;
 import io.github.mrtabaofficial.wardline.databinding.ActivitySignInBinding;
 import io.github.mrtabaofficial.wardline.utilities.Constants;
 import io.github.mrtabaofficial.wardline.utilities.PreferenceManager;
+import io.github.mrtabaofficial.wardline.utilities.SystemBars;
+import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.DocumentSnapshot;
@@ -49,6 +50,7 @@ public class SignInActivity extends AppCompatActivity {
         }
         binding = ActivitySignInBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
+        SystemBars.applyEdgeToEdge(this, binding.getRoot());
         setListeners();
     }
 
@@ -129,7 +131,7 @@ public class SignInActivity extends AppCompatActivity {
     }
 
     private void showEmailNotVerifiedDialog(FirebaseUser user) {
-        new AlertDialog.Builder(this)
+        new MaterialAlertDialogBuilder(this)
                 .setTitle(R.string.email_not_verified_title)
                 .setMessage(getString(R.string.email_not_verified_message, user.getEmail()))
                 .setPositiveButton(R.string.resend_email, (dialog, which) ->
@@ -149,7 +151,7 @@ public class SignInActivity extends AppCompatActivity {
         View dialogView = inflater.inflate(R.layout.dialog_forgot_password, null);
         EditText emailInput = dialogView.findViewById(R.id.inputEmail);
 
-        new AlertDialog.Builder(this)
+        new MaterialAlertDialogBuilder(this)
                 .setTitle(R.string.forgot_password)
                 .setView(dialogView)
                 .setPositiveButton(R.string.send, (dialog, which) -> {

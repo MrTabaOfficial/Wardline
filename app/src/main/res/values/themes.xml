@@ -1,6 +1,47 @@
-<resources xmlns:tools="http://schemas.android.com/tools">
-    <style name="Base.Theme.MyApplication" parent="Theme.MaterialComponents.DayNight.NoActionBar">
-        <item name="colorPrimary">@color/primary</item>
-        <item name="android:statusBarColor">@color/primary</item>
+<resources>
+    <style name="Base.Theme.MyApplication" parent="Theme.Material3.DayNight.NoActionBar">
+        <item name="colorPrimary">@color/md_light_primary</item>
+        <item name="colorOnPrimary">@color/md_light_on_primary</item>
+        <item name="colorPrimaryContainer">@color/md_light_primary_container</item>
+        <item name="colorOnPrimaryContainer">@color/md_light_on_primary_container</item>
+        <item name="colorSecondary">@color/md_light_secondary</item>
+        <item name="colorOnSecondary">@color/md_light_on_secondary</item>
+        <item name="colorSecondaryContainer">@color/md_light_secondary_container</item>
+        <item name="colorOnSecondaryContainer">@color/md_light_on_secondary_container</item>
+        <item name="colorTertiary">@color/md_light_tertiary</item>
+        <item name="colorOnTertiary">@color/md_light_on_tertiary</item>
+        <item name="colorError">@color/md_light_error</item>
+        <item name="colorOnError">@color/md_light_on_error</item>
+        <item name="android:colorBackground">@color/md_light_background</item>
+        <item name="colorSurface">@color/md_light_surface</item>
+        <item name="colorOnSurface">@color/md_light_on_surface</item>
+        <item name="colorSurfaceVariant">@color/md_light_surface_variant</item>
+        <item name="colorOnSurfaceVariant">@color/md_light_on_surface_variant</item>
+        <item name="colorOutline">@color/md_light_outline</item>
+        <item name="colorOutlineVariant">@color/md_light_outline_variant</item>
+        <item name="colorSurfaceContainerLowest">@color/md_light_surface_container_lowest</item>
+        <item name="colorSurfaceContainerLow">@color/md_light_surface_container_low</item>
+        <item name="colorSurfaceContainer">@color/md_light_surface_container</item>
+        <item name="colorSurfaceContainerHigh">@color/md_light_surface_container_high</item>
+        <item name="colorSurfaceContainerHighest">@color/md_light_surface_container_highest</item>
+        <item name="materialAlertDialogTheme">@style/ThemeOverlay.App.MaterialAlertDialog</item>
+    </style>
+
+    <style name="ThemeOverlay.App.MaterialAlertDialog" parent="ThemeOverlay.Material3.MaterialAlertDialog" />
+
+    <style name="ShapeAppearance.App.Circle" parent="">
+        <item name="cornerFamily">rounded</item>
+        <item name="cornerSize">50%</item>
+    </style>
+
+    <style name="Widget.App.Header.Title" parent="">
+        <item name="android:textAppearance">?attr/textAppearanceTitleLarge</item>
+        <item name="android:textColor">?attr/colorOnSurface</item>
+        <item name="android:maxLines">1</item>
+        <item name="android:ellipsize">end</item>
+    </style>
+
+    <style name="Widget.App.IconButton" parent="Widget.Material3.Button.IconButton">
+        <item name="iconTint">?attr/colorOnSurfaceVariant</item>
     </style>
 </resources>

@@ -17,6 +17,7 @@ import io.github.mrtabaofficial.wardline.models.User;
 import io.github.mrtabaofficial.wardline.utilities.Constants;
 import io.github.mrtabaofficial.wardline.utilities.ConversationIds;
 import io.github.mrtabaofficial.wardline.utilities.ImageUtils;
+import io.github.mrtabaofficial.wardline.utilities.SystemBars;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.DocumentChange;
 import com.google.firebase.firestore.DocumentReference;
@@ -61,6 +62,7 @@ public class ChatActivity extends BaseActivity {
         }
         binding = ActivityChatBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
+        SystemBars.applyEdgeToEdge(this, binding.getRoot());
 
         receiverUser = IntentCompat.getSerializableExtra(getIntent(), Constants.KEY_USER, User.class);
         currentUserId = Objects.requireNonNull(FirebaseAuth.getInstance().getCurrentUser()).getUid();

@@ -11,13 +11,14 @@ import android.widget.Toast;
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.PickVisualMediaRequest;
 import androidx.activity.result.contract.ActivityResultContracts;
-import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 
 import io.github.mrtabaofficial.wardline.R;
 import io.github.mrtabaofficial.wardline.databinding.ActivitySignUpBinding;
 import io.github.mrtabaofficial.wardline.utilities.Constants;
 import io.github.mrtabaofficial.wardline.utilities.ImageUtils;
+import io.github.mrtabaofficial.wardline.utilities.SystemBars;
+import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.FirebaseFirestore;
@@ -40,6 +41,7 @@ public class SignUpActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         binding = ActivitySignUpBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
+        SystemBars.applyEdgeToEdge(this, binding.getRoot());
         setListeners();
     }
 
@@ -119,7 +121,7 @@ public class SignUpActivity extends AppCompatActivity {
     }
 
     private void showVerificationDialog(String email, boolean emailSent) {
-        new AlertDialog.Builder(this)
+        new MaterialAlertDialogBuilder(this)
                 .setTitle(R.string.email_verification_title)
                 .setMessage(emailSent
                         ? getString(R.string.email_verification_message, email)
@@ -148,7 +150,7 @@ public class SignUpActivity extends AppCompatActivity {
             showToast(getString(R.string.error_invalid_email));
             return false;
         } else if (password.length() < Constants.MIN_PASSWORD_LENGTH) {
-            showToast(getString(R.string.error_password_too_short, Constants.MIN_PASSWORD_LENGTH));
+            showToast(getResources().getQuantityString(R.plurals.error_password_too_short, Constants.MIN_PASSWORD_LENGTH, Constants.MIN_PASSWORD_LENGTH));
             return false;
         } else if (!password.equals(binding.inputConfirmPassword.getText().toString())) {
             showToast(getString(R.string.error_password_mismatch));

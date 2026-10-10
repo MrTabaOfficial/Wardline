@@ -9,6 +9,7 @@ import io.github.mrtabaofficial.wardline.databinding.ActivityProfileBinding;
 import io.github.mrtabaofficial.wardline.models.User;
 import io.github.mrtabaofficial.wardline.utilities.Constants;
 import io.github.mrtabaofficial.wardline.utilities.ImageUtils;
+import io.github.mrtabaofficial.wardline.utilities.SystemBars;
 
 public class ProfileActivity extends AppCompatActivity {
 
@@ -17,6 +18,7 @@ public class ProfileActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         ActivityProfileBinding binding = ActivityProfileBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
+        SystemBars.applyEdgeToEdge(this, binding.getRoot());
         binding.btnback.setOnClickListener(view -> finish());
 
         User user = IntentCompat.getSerializableExtra(getIntent(), Constants.KEY_USER, User.class);

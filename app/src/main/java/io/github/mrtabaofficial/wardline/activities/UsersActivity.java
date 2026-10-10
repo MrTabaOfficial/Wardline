@@ -11,6 +11,7 @@ import io.github.mrtabaofficial.wardline.databinding.ActivityUsersBinding;
 import io.github.mrtabaofficial.wardline.listeners.UserListener;
 import io.github.mrtabaofficial.wardline.models.User;
 import io.github.mrtabaofficial.wardline.utilities.Constants;
+import io.github.mrtabaofficial.wardline.utilities.SystemBars;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
@@ -30,6 +31,7 @@ public class UsersActivity extends BaseActivity implements UserListener {
         }
         binding = ActivityUsersBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
+        SystemBars.applyEdgeToEdge(this, binding.getRoot());
         setListeners();
         getUsers();
     }

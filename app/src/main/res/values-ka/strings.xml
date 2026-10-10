@@ -15,9 +15,7 @@
     <string name="online">აქტიურია</string>
     <string name="select_language">აირჩიეთ ენა</string>
     <string name="save">დამახსოვრება</string>
-    <string name="enable_dark_mode">ჩართეთ მუქი რეჟიმი</string>
     <string name="dark_mode">მუქი რეჟიმი</string>
-    <string name="save_password">შეინახე პაროლი</string>
     <string name="new_password">ახალი პაროლი</string>
     <string name="old_password">ძველი პაროლი</string>
     <string name="change_password">პაროლის შეცვლა</string>
@@ -40,7 +38,6 @@
     <string name="error_enter_email">შეიყვანეთ ელ-ფოსტა</string>
     <string name="error_invalid_email">შეიყვანეთ სწორი ელ-ფოსტა</string>
     <string name="error_enter_password">შეიყვანეთ პაროლი</string>
-    <string name="error_password_too_short">პაროლი უნდა შეიცავდეს მინიმუმ %1$d სიმბოლოს</string>
     <string name="error_password_mismatch">პაროლები არ ემთხვევა</string>
     <string name="error_select_image">აირჩიეთ პროფილის სურათი</string>
     <string name="error_invalid_credentials">არასწორი ელ-ფოსტა ან პაროლი</string>
@@ -63,4 +60,20 @@
     <string name="error_update_picture">პროფილის სურათის განახლება ვერ მოხერხდა</string>
     <string name="email_change_link_sent">ახალი ელ-ფოსტის დასადასტურებლად გახსენით ბმული, რომელიც გაიგზავნა მისამართზე %1$s.</string>
     <string name="error_change_email">ელ-ფოსტის შეცვლა ვერ მოხერხდა. შეამოწმეთ პაროლი და სცადეთ თავიდან.</string>
+    <string name="password_requirements">მინიმუმ 8 სიმბოლო</string>
+    <string name="already_have_account">უკვე გაქვთ ანგარიში? ავტორიზაცია</string>
+    <string name="profile">პროფილი</string>
+    <string name="profile_picture">პროფილის სურათი</string>
+    <string name="chats">ჩატები</string>
+    <string name="new_chat">ახალი ჩატი</string>
+    <string name="no_conversations">მიმოწერა ჯერ არ გაქვთ. დასაწყებად დააჭირეთ „ახალი ჩატი“-ს.</string>
+    <string name="contact_info">კონტაქტის ინფორმაცია</string>
+    <string name="appearance">იერსახე</string>
+    <string name="language">ენა</string>
+    <string name="new_email">ახალი ელ-ფოსტა</string>
+    <string name="current_password">მიმდინარე პაროლი</string>
+    <plurals name="error_password_too_short">
+        <item quantity="one">პაროლი უნდა შეიცავდეს მინიმუმ %d სიმბოლოს</item>
+        <item quantity="other">პაროლი უნდა შეიცავდეს მინიმუმ %d სიმბოლოს</item>
+    </plurals>
 </resources>

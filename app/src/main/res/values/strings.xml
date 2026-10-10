@@ -15,9 +15,7 @@
     <string name="online">Online</string>
     <string name="select_language">Select Language</string>
     <string name="save">Save</string>
-    <string name="enable_dark_mode">Enable Dark Mode</string>
     <string name="dark_mode">Dark Mode</string>
-    <string name="save_password">Save Password</string>
     <string name="new_password">New Password</string>
     <string name="old_password">Old Password</string>
     <string name="change_password">Change Password</string>
@@ -42,7 +40,6 @@
     <string name="error_enter_email">Enter your email</string>
     <string name="error_invalid_email">Enter a valid email</string>
     <string name="error_enter_password">Enter your password</string>
-    <string name="error_password_too_short">Password must be at least %1$d characters</string>
     <string name="error_password_mismatch">Passwords do not match</string>
     <string name="error_select_image">Select a profile image</string>
     <string name="error_invalid_credentials">Invalid email or password</string>
@@ -65,4 +62,20 @@
     <string name="error_update_picture">Unable to update the profile picture</string>
     <string name="email_change_link_sent">Open the link sent to %1$s to confirm your new email.</string>
     <string name="error_change_email">Unable to change the email. Check your password and try again.</string>
+    <string name="password_requirements">At least 8 characters</string>
+    <string name="already_have_account">Already have an account? Sign in</string>
+    <string name="profile">Profile</string>
+    <string name="profile_picture">Profile picture</string>
+    <string name="chats">Chats</string>
+    <string name="new_chat">New chat</string>
+    <string name="no_conversations">No conversations yet. Tap New chat to start one.</string>
+    <string name="contact_info">Contact info</string>
+    <string name="appearance">Appearance</string>
+    <string name="language">Language</string>
+    <string name="new_email">New email</string>
+    <string name="current_password">Current password</string>
+    <plurals name="error_password_too_short">
+        <item quantity="one">Password must be at least %d character</item>
+        <item quantity="other">Password must be at least %d characters</item>
+    </plurals>
 </resources>
