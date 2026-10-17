@@ -26,9 +26,14 @@ android {
         versionName = "2.0.0"
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
         buildConfigField("String", "CHAT_AES_KEY", "\"$chatAesKey\"")
+        buildConfigField("String", "FIREBASE_EMULATOR_HOST", "\"\"")
     }
 
     buildTypes {
+        debug {
+            val emulatorHost = providers.gradleProperty("firebaseEmulatorHost").getOrElse("")
+            buildConfigField("String", "FIREBASE_EMULATOR_HOST", "\"$emulatorHost\"")
+        }
         release {
             isMinifyEnabled = true
             isShrinkResources = true

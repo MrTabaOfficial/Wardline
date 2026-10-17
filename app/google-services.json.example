@@ -1,8 +1,8 @@
 {
   "project_info": {
     "project_number": "000000000000",
-    "project_id": "your-firebase-project-id",
-    "storage_bucket": "your-firebase-project-id.appspot.com"
+    "project_id": "demo-wardline",
+    "storage_bucket": "demo-wardline.appspot.com"
   },
   "client": [
     {
