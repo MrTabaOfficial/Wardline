@@ -4,6 +4,9 @@ updates:
     directory: /
     schedule:
       interval: weekly
+    ignore:
+      - dependency-name: "com.android.application"
+      - dependency-name: "com.android.tools.build:gradle"
     groups:
       androidx:
         patterns: ["androidx.*"]
