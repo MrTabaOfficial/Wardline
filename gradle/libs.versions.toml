@@ -1,7 +1,7 @@
 [versions]
 agp = "9.3.0"
 googleServices = "4.5.0"
-firebaseBom = "35.0.2"
+firebaseBom = "35.1.0"
 activity = "1.13.0"
 appcompat = "1.8.0"
 constraintlayout = "2.2.2"
